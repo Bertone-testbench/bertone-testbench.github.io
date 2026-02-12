@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solvy.ai — Your AI Math Tutor</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --warm-white: #FFFDF9;
+    --peach: #FFD6BA;
+    --coral: #FF6B6B;
+    --deep-coral: #E84545;
+    --teal: #2EC4B6;
+    --deep-teal: #1A9E93;
+    --navy: #1B2A4A;
+    --dark: #0F1A2E;
+    --muted: #6B7B8D;
+    --lavender: #E8DEFF;
+    --mint: #D0F5EC;
+    --gold: #FFD166;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ============ NAV ============ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255, 248, 240, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(27, 42, 74, 0.06);
+    transition: all 0.3s ease;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 900; font-size: 1.6rem;
+    color: var(--navy);
+    display: flex; align-items: center; gap: 0.4rem;
+    text-decoration: none;
+  }
+
+  .logo .dot { color: var(--coral); }
+
+  .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-weight: 500; font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--navy); }
+
+  .btn-nav {
+    background: var(--navy); color: white;
+    padding: 0.6rem 1.5rem; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-nav:hover { background: var(--dark); transform: translateY(-1px); }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-shapes {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  }
+
+  .floating-shape {
+    position: absolute; border-radius: 50%;
+    animation: floatShape 8s ease-in-out infinite;
+  }
+
+  .floating-shape:nth-child(1) {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(46, 196, 182, 0.12), transparent 70%);
+    top: 10%; right: -5%;
+    animation-delay: 0s;
+  }
+
+  .floating-shape:nth-child(2) {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255, 107, 107, 0.1), transparent 70%);
+    bottom: 15%; left: -3%;
+    animation-delay: -3s;
+  }
+
+  .floating-shape:nth-child(3) {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255, 209, 102, 0.15), transparent 70%);
+    top: 30%; left: 40%;
+    animation-delay: -5s;
+  }
+
+  @keyframes floatShape {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(20px, -30px) scale(1.05); }
+    66% { transform: translate(-15px, 15px) scale(0.97); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--mint); color: var(--deep-teal);
+    padding: 0.4rem 1rem; border-radius: 50px;
+    font-weight: 600; font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-tag .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.5); }
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 4.5rem; line-height: 1.1;
+    font-weight: 900; color: var(--navy);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero p {
+    font-size: 1.25rem; color: var(--muted);
+    margin-bottom: 2.5rem; max-width: 540px;
+  }
+
+  .hero-btns { display: flex; gap: 1.5rem; }
+
+  .btn-primary {
+    background: var(--coral); color: white;
+    padding: 1rem 2.5rem; border-radius: 50px;
+    text-decoration: none; font-weight: 700; font-size: 1.1rem;
+    transition: all 0.3s;
+    box-shadow: 0 10px 20px rgba(255, 107, 107, 0.2);
+  }
+
+  .btn-primary:hover {
+    background: var(--deep-coral);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(255, 107, 107, 0.3);
+  }
+
+  .hero-image-container {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(27, 42, 74, 0.12);
+    aspect-ratio: 4/5;
+    background: var(--peach);
+  }
+
+  .hero-image-container img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  /* ============ HOW IT WORKS ============ */
+  .section { padding: 8rem 3rem; max-width: 1200px; margin: 0 auto; }
+
+  .section-header { text-align: center; margin-bottom: 5rem; }
+
+  .section-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 3rem; font-weight: 900;
+    margin-bottom: 1rem;
+  }
+
+  .section-header p { color: var(--muted); font-size: 1.2rem; }
+
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem;
+  }
+
+  .step-card {
+    background: var(--warm-white);
+    padding: 3rem 2rem; border-radius: 20px;
+    border: 1px solid rgba(27, 42, 74, 0.05);
+    transition: all 0.3s;
+  }
+
+  .step-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(27, 42, 74, 0.05); }
+
+  .step-num {
+    width: 40px; height: 40px; background: var(--lavender);
+    color: var(--navy); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; margin-bottom: 2rem;
+  }
+
+  .step-card h3 { font-family: 'Fraunces', serif; margin-bottom: 1rem; font-size: 1.5rem; }
+
+  /* ============ WHY DIFFERENT ============ */
+  .comparison-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    margin-top: 4rem;
+  }
+
+  .compare-card {
+    background: var(--warm-white);
+    padding: 2.5rem; border-radius: 24px;
+    border: 1px solid rgba(27, 42, 74, 0.06);
+  }
+
+  .compare-card.featured {
+    background: var(--navy); color: white;
+    transform: scale(1.05);
+    box-shadow: 0 30px 60px rgba(27, 42, 74, 0.2);
+  }
+
+  .compare-card h3 { font-family: 'Fraunces', serif; margin-bottom: 1.5rem; font-size: 1.8rem; }
+  .compare-card.featured h3 { color: var(--peach); }
+
+  .compare-list { list-style: none; }
+  .compare-list li {
+    margin-bottom: 1rem; display: flex; gap: 0.8rem;
+    font-size: 0.95rem; line-height: 1.4;
+  }
+
+  .compare-card.featured .compare-list li { color: rgba(255, 255, 255, 0.8); }
+
+  .check { color: var(--teal); font-weight: bold; }
+  .cross { color: var(--coral); font-weight: bold; }
+
+  /* ============ SIMULATION ============ */
+  .simulation-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .sim-panel {
+    background: var(--navy); border-radius: 24px;
+    overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 20px 40px rgba(27, 42, 74, 0.15);
+    position: relative;
+  }
+
+  .sim-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .sim-title { color: white; font-weight: 600; font-size: 0.9rem; }
+
+  .sim-chips { display: flex; gap: 0.5rem; }
+
+  .chip {
+    padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  .chip-bad { background: rgba(255, 107, 107, 0.2); color: var(--coral); }
+  .chip-good { background: rgba(46, 196, 182, 0.2); color: var(--teal); }
+
+  .sim-player {
+    flex-grow: 1; padding: 3rem 2rem; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    min-height: 240px; position: relative;
+  }
+
+  .sim-caption {
+    color: white; font-size: 1.25rem; font-weight: 500;
+    opacity: 0; transform: translateY(10px); transition: all 0.4s ease;
+    max-width: 80%;
+  }
+
+  .sim-caption.active { opacity: 1; transform: translateY(0); }
+
+  .sim-overlay {
+    position: absolute; inset: 0; background: rgba(15, 26, 46, 0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10; transition: opacity 0.3s;
+  }
+
+  .sim-overlay.hidden { opacity: 0; pointer-events: none; }
+
+  .sim-controls {
+    padding: 1rem 1.5rem; background: rgba(0, 0, 0, 0.2);
+    display: flex; align-items: center; gap: 1rem;
+  }
+
+  .progress-bar {
+    flex-grow: 1; height: 4px; background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px; overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%; width: 0%; background: var(--coral);
+    transition: width 0.1s linear;
+  }
+
+  .sim-panel-right .progress-fill { background: var(--teal); }
+
+  .play-main-btn {
+    display: block; margin: 3rem auto 0;
+    background: var(--navy); color: white;
+    padding: 1.2rem 3rem; border-radius: 50px;
+    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 0.8rem;
+    transition: all 0.3s;
+  }
+
+  .play-main-btn:hover { background: var(--dark); transform: scale(1.05); }
+
+  .play-main-btn:focus { outline: none; ring: 3px solid var(--peach); }
+
+  /* ============ FAQ ============ */
+  .faq-container { max-width: 800px; margin: 0 auto; }
+
+  .faq-item {
+    background: var(--warm-white);
+    margin-bottom: 1rem; border-radius: 12px;
+    border: 1px solid rgba(27, 42, 74, 0.05);
+    overflow: hidden;
+  }
+
+  .faq-question {
+    padding: 1.5rem 2rem; cursor: pointer;
+    font-weight: 700; display: flex; justify-content: space-between;
+    align-items: center;
+  }
+
+  .faq-answer {
+    padding: 0 2rem 1.5rem;
+    color: var(--muted);
+    display: none;
+  }
+
+  /* ============ CTA ============ */
+  .cta-section {
+    background: var(--peach);
+    margin: 4rem 3rem; border-radius: 40px;
+    padding: 6rem 3rem; text-align: center;
+  }
+
+  .cta-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 3.5rem; font-weight: 900; margin-bottom: 2rem;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    padding: 4rem 3rem; text-align: center;
+    border-top: 1px solid rgba(27, 42, 74, 0.05);
+    color: var(--muted); font-size: 0.9rem;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 968px) {
+    h1 { font-size: 3rem; }
+    .hero-content { grid-template-columns: 1fr; text-align: center; }
+    .hero-content .hero-image-container { display: none; }
+    .hero p { margin: 0 auto 2.5rem; }
+    .hero-btns { justify-content: center; }
+    .steps-grid, .comparison-grid, .simulation-grid { grid-template-columns: 1fr; }
+    .compare-card.featured { transform: none; }
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .cta-section h2 { font-size: 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Solvy<span class="dot">.</span>ai</a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#why">Why Solvy</a>
+      <a href="#simulation">Simulation</a>
+      <a href="./failure.html">When AI fails</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#" class="btn-nav">Get Started</a>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-bg-shapes">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-tag">
+            <div class="pulse"></div>
+            Adaptive Learning Now Live
+          </div>
+          <h1>Math isn't hard.<br>It's just personal.</h1>
+          <p>
+            Math is the #1 subject students struggle with. We built an AI tutor that learns your unique strengths and gaps to make mastery inevitable.
+          </p>
+          <div class="hero-btns">
+            <a href="#" class="btn-primary">Start Learning Now</a>
+          </div>
+        </div>
+        <div class="hero-image-container">
+          <img src="solvybot.jpg" alt="Solvy AI Math Tutor Robot" onerror="this.style.display='none'; this.parentElement.style.background='var(--peach)'">
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <div class="section-header">
+        <h2>How Solvy.ai Works</h2>
+        <p>Three simple steps to mastering any concept.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Bite-Sized Lessons</h3>
+          <p>We explain complex topics in simple, clear language that avoids the jargon of traditional textbooks.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Adaptive Practice</h3>
+          <p>Solve problems that match your current level perfectly. Not too easy to be boring, not too hard to be frustrating.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Hints, Not Answers</h3>
+          <p>Chat with your AI tutor when stuck. It guides you with the right hints to help you find the solution yourself.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="why" class="section">
+      <div class="section-header">
+        <h2>Why it's different</h2>
+        <p>A specialized approach to math education.</p>
+      </div>
+      <div class="comparison-grid">
+        <div class="compare-card">
+          <h3>Private Tutor</h3>
+          <ul class="compare-list">
+            <li><span class="check">✓</span> High-quality personalization</li>
+            <li><span class="cross">✕</span> €30–50/hour cost</li>
+            <li><span class="cross">✕</span> Rigid scheduling</li>
+            <li><span class="cross">✕</span> Only available during sessions</li>
+            <li><span class="cross">✕</span> Human memory is imperfect</li>
+          </ul>
+        </div>
+        <div class="compare-card featured">
+          <h3>Solvy AI</h3>
+          <ul class="compare-list">
+            <li><span class="check">✓</span> Personalized to your learning style</li>
+            <li><span class="check">✓</span> Fractional cost of human tutors</li>
+            <li><span class="check">✓</span> Available 24/7, anywhere</li>
+            <li><span class="check">✓</span> Guides you with hints (no cheating)</li>
+            <li><span class="check">✓</span> Tracks every mistake to adapt</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h3>ChatGPT</h3>
+          <ul class="compare-list">
+            <li><span class="check">✓</span> Available 24/7</li>
+            <li><span class="cross">✕</span> Often gives the answer immediately</li>
+            <li><span class="cross">✕</span> Frequently hallucinates math steps</li>
+            <li><span class="cross">✕</span> No curriculum or progress tracking</li>
+            <li><span class="cross">✕</span> Generic, not student-focused</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="simulation" class="section">
+      <div class="section-header">
+        <h2>A quick simulation</h2>
+        <p>Experience the difference in structure and consistency.</p>
+      </div>
+      
+      <div class="simulation-grid">
+        <!-- Private Tutor Panel -->
+        <div class="sim-panel sim-panel-left">
+          <div class="sim-header">
+            <span class="sim-title">Scenario: Private Tutor</span>
+            <div class="sim-chips">
+              <span class="chip chip-bad">Late</span>
+              <span class="chip chip-bad">Distracted</span>
+              <span class="chip chip-bad">Inconsistent</span>
+            </div>
+          </div>
+          <div class="sim-player">
+            <div class="sim-overlay" id="overlay-left">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="sim-caption" data-step="0">“Tutor: ‘Sorry—traffic. I’m late.’”</div>
+            <div class="sim-caption" data-step="1">“Tutor sounds distracted and rushed.”</div>
+            <div class="sim-caption" data-step="2">“Tutor gives an unclear explanation.”</div>
+            <div class="sim-caption" data-step="3">“Student: ‘Wait… that doesn’t match the homework.’”</div>
+          </div>
+          <div class="sim-controls">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white" opacity="0.5"><path d="M8 5v14l11-7z"/></svg>
+            <div class="progress-bar"><div class="progress-fill" id="progress-left"></div></div>
+            <span style="color: white; font-size: 0.7rem; opacity: 0.5;">0:08</span>
+          </div>
+        </div>
+
+        <!-- Solvy AI Panel -->
+        <div class="sim-panel sim-panel-right">
+          <div class="sim-header">
+            <span class="sim-title">Scenario: Solvy AI</span>
+            <div class="sim-chips">
+              <span class="chip chip-good">Always available</span>
+              <span class="chip chip-good">Consistent</span>
+              <span class="chip chip-good">Structured</span>
+            </div>
+          </div>
+          <div class="sim-player">
+            <div class="sim-overlay" id="overlay-right">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="sim-caption" data-step="0">“Solvy AI: ‘Let’s solve it step by step.’”</div>
+            <div class="sim-caption" data-step="1">“Calm, structured hints—not just the answer.”</div>
+            <div class="sim-caption" data-step="2">“Checks the student’s level and adjusts difficulty.”</div>
+            <div class="sim-caption" data-step="3">“Student: ‘Now I actually get it.’”</div>
+          </div>
+          <div class="sim-controls">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white" opacity="0.5"><path d="M8 5v14l11-7z"/></svg>
+            <div class="progress-bar"><div class="progress-fill" id="progress-right"></div></div>
+            <span style="color: white; font-size: 0.7rem; opacity: 0.5;">0:08</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="play-sim" class="play-main-btn" aria-label="Play Simulation">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <span id="play-text">Run Simulation</span>
+      </button>
+    </section>
+
+    <section id="faq" class="section">
+      <div class="section-header">
+        <h2>Common Questions</h2>
+      </div>
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-question">What levels of math do you cover? <span>+</span></div>
+          <div class="faq-answer">Everything from basic arithmetic to calculus. Our adaptive engine works regardless of the specific topic.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Will it just do my homework for me? <span>+</span></div>
+          <div class="faq-answer">No. Solvy is designed to teach. If you're stuck, it gives conceptual hints and logic prompts, never the final answer.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How does the AI "learn" me? <span>+</span></div>
+          <div class="faq-answer">It tracks which concepts you master quickly and where you struggle, adjusting the difficulty and explanation style in real-time.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I use it on my phone? <span>+</span></div>
+          <div class="faq-answer">Yes! Solvy.ai is fully mobile-responsive and designed for learning on any device.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2>Ready to stop struggling?</h2>
+      <a href="#" class="btn-primary">Get Started for Free</a>
+    </section>
+
+    <!-- Additional research/evidence section you added -->
+    <section style="padding:6rem 3rem; max-width:1100px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:4rem;">
+        <h2 style="font-family:'Fraunces',serif; font-size:3rem; font-weight:900;">
+          Why AI tutoring works
+        </h2>
+        <p style="color:#6B7B8D; font-size:1.2rem; max-width:720px; margin:1rem auto 0;">
+          Independent education research shows that well-designed AI tutors can match — and sometimes exceed —
+          traditional tutoring, when they are built to teach, not just answer.
+        </p>
+      </div>
+
+      <!-- Evidence blocks -->
+      <div style="display:grid; gap:1.5rem; margin-bottom:3rem;">
+
+        <div style="display:grid; grid-template-columns:60px 1fr; gap:1rem; align-items:flex-start;
+                    background:#F3F6FF; border:1px solid #D6E0FF; border-radius:18px; padding:1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:2.5rem; color:#2F6BFF;">➜</span>
+          </div>
+          <p>
+            <strong>Intelligent Tutoring Systems can match human tutors</strong> in learning outcomes,
+            outperforming standard classroom instruction in multiple large studies.
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:60px 1fr; gap:1rem; align-items:flex-start;
+                    background:#F3F6FF; border:1px solid #D6E0FF; border-radius:18px; padding:1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:2.5rem; color:#2F6BFF;">➜</span>
+          </div>
+          <p>
+            <strong>Generative AI improves tutoring quality</strong> by enabling natural dialogue,
+            adaptive explanations, and dynamic questions based on what students actually say and write.
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:60px 1fr; gap:1rem; align-items:flex-start;
+                    background:#F3F6FF; border:1px solid #D6E0FF; border-radius:18px; padding:1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:2.5rem; color:#2F6BFF;">➜</span>
+          </div>
+          <p>
+            <strong>Students learn better in psychologically safe environments</strong>,
+            where they can ask questions freely without fear of judgment or embarrassment.
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:60px 1fr; gap:1rem; align-items:flex-start;
+                    background:#F3F6FF; border:1px solid #D6E0FF; border-radius:18px; padding:1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:2.5rem; color:#2F6BFF;">➜</span>
+          </div>
+          <p>
+            <strong>Design matters more than technology</strong>:
+            effective AI tutors use hints, scaffolding, and step-by-step guidance
+            instead of giving instant answers.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Source -->
+      <div style="color:#6B7B8D; font-size:0.95rem; margin-bottom:3rem;">
+        Source adapted from:
+        <strong>Mary Burns</strong>,
+        Consultant — <strong>Brookings Global Task Force on AI in Education</strong>
+      </div>
+
+      <!-- Conversion text -->
+      <div style="background:#FFD6BA; border-radius:28px; padding:3rem; text-align:center;">
+        <h3 style="font-family:'Fraunces',serif; font-size:2.2rem; font-weight:900; margin-bottom:1rem;">
+          This is exactly why Solvy exists
+        </h3>
+        <p style="font-size:1.1rem; max-width:720px; margin:0 auto 2rem;">
+          Solvy applies these research-backed principles in a practical way:
+          structured hints instead of answers, adaptive practice, and calm,
+          consistent guidance — available anytime, without pressure or judgment.
+        </p>
+        <a href="#" class="btn-primary">Try Solvy now</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2026 Solvy.ai. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // FAQ Toggle
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const answer = q.nextElementSibling;
+        const isOpen = answer.style.display === 'block';
+        document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+        answer.style.display = isOpen ? 'none' : 'block';
+      });
+    });
+
+    // Simulation logic (unchanged from your original)
+    const playBtn = document.getElementById('play-sim');
+    const playText = document.getElementById('play-text');
+    const overlays = [document.getElementById('overlay-left'), document.getElementById('overlay-right')];
+    const progressFills = [document.getElementById('progress-left'), document.getElementById('progress-right')];
+    const leftCaptions = document.querySelectorAll('.sim-panel-left .sim-caption');
+    const rightCaptions = document.querySelectorAll('.sim-panel-right .sim-caption');
+    
+    let isPlaying = false;
+    let currentStep = 0;
+    const totalSteps = 4;
+    const stepDuration = 2000;
+
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) return;
+      
+      if (playText.innerText === 'Reset Simulation') {
+        resetSim();
+        return;
+      }
+
+      startSim();
+    });
+
+    function startSim() {
+      isPlaying = true;
+      playBtn.style.opacity = '0.5';
+      playBtn.style.pointerEvents = 'none';
+      
+      overlays.forEach(o => o.classList.add('hidden'));
+      
+      currentStep = 0;
+      updateCaptions();
+      
+      const startTime = Date.now();
+      const totalDuration = totalSteps * stepDuration;
+
+      const anim = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min((elapsed / totalDuration) * 100, 100);
+        
+        progressFills.forEach(f => f.style.width = progress + '%');
+        
+        const nextStep = Math.floor(elapsed / stepDuration);
+        if (nextStep !== currentStep && nextStep < totalSteps) {
+          currentStep = nextStep;
+          updateCaptions();
+        }
+
+        if (elapsed >= totalDuration) {
+          clearInterval(anim);
+          isPlaying = false;
+          playBtn.style.opacity = '1';
+          playBtn.style.pointerEvents = 'auto';
+          playText.innerText = 'Reset Simulation';
+        }
+      }, 50);
+    }
+
+    function updateCaptions() {
+      leftCaptions.forEach((c, i) => c.classList.toggle('active', i === currentStep));
+      rightCaptions.forEach((c, i) => c.classList.toggle('active', i === currentStep));
+    }
+
+    function resetSim() {
+      progressFills.forEach(f => f.style.width = '0%');
+      overlays.forEach(o => o.classList.remove('hidden'));
+      leftCaptions.forEach(c => c.classList.remove('active'));
+      rightCaptions.forEach(c => c.classList.remove('active'));
+      playText.innerText = 'Run Simulation';
+    }
+  </script>
+</body>
+</html>

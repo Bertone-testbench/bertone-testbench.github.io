@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solvy.ai — Your AI Math Tutor</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --warm-white: #FFFDF9;
+    --peach: #FFD6BA;
+    --coral: #FF6B6B;
+    --deep-coral: #E84545;
+    --teal: #2EC4B6;
+    --deep-teal: #1A9E93;
+    --navy: #1B2A4A;
+    --dark: #0F1A2E;
+    --muted: #6B7B8D;
+    --lavender: #E8DEFF;
+    --mint: #D0F5EC;
+    --gold: #FFD166;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    overflow-x: hidden;
+  }
+
+  /* ============ NAV ============ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255, 248, 240, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(27, 42, 74, 0.06);
+    transition: all 0.3s ease;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 900; font-size: 1.6rem;
+    color: var(--navy);
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+
+  .logo .dot { color: var(--coral); }
+
+  .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-weight: 500; font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--navy); }
+
+  .btn-nav {
+    background: var(--navy); color: white;
+    padding: 0.6rem 1.5rem; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-nav:hover { background: var(--dark); transform: translateY(-1px); }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-shapes {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  }
+
+  .floating-shape {
+    position: absolute; border-radius: 50%;
+    animation: floatShape 8s ease-in-out infinite;
+  }
+
+  .floating-shape:nth-child(1) {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(46, 196, 182, 0.12), transparent 70%);
+    top: 10%; right: -5%;
+    animation-delay: 0s;
+  }
+
+  .floating-shape:nth-child(2) {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255, 107, 107, 0.1), transparent 70%);
+    bottom: 15%; left: -3%;
+    animation-delay: -3s;
+  }
+
+  .floating-shape:nth-child(3) {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255, 209, 102, 0.15), transparent 70%);
+    top: 30%; left: 40%;
+    animation-delay: -5s;
+  }
+
+  @keyframes floatShape {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(20px, -30px) scale(1.05); }
+    66% { transform: translate(-15px, 15px) scale(0.97); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--mint); color: var(--deep-teal);
+    padding: 0.4rem 1rem; border-radius: 50px;
+    font-weight: 600; font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.8s ease both;
+  }
+
+  .hero-tag .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 4.2rem; line-height: 1.1;
+    font-weight: 900; color: var(--dark);
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.8s ease 0.1s both;
+  }
+
+  .hero h1 .highlight {
+    color: var(--coral);
+    position: relative;
+  }
+
+  .hero h1 .highlight::after {
+    content: '';
+    position: absolute; bottom: 2px; left: 0; right: 0;
+    height: 6px; background: var(--peach); border-radius: 3px;
+    z-index: -1;
+  }
+
+  .hero-desc {
+    font-size: 1.2rem; line-height: 1.7;
+    color: var(--muted); max-width: 500px;
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 0.8s ease 0.2s both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; align-items: center;
+    animation: fadeInUp 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    background: var(--coral); color: white;
+    padding: 1rem 2.2rem; border-radius: 50px;
+    text-decoration: none; font-weight: 700; font-size: 1.05rem;
+    transition: all 0.3s ease;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+  }
+
+  .btn-primary:hover {
+    background: var(--deep-coral);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+  }
+
+  .btn-secondary {
+    color: var(--navy);
+    padding: 1rem 1.5rem;
+    text-decoration: none; font-weight: 600; font-size: 1.05rem;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+
+  .btn-secondary:hover { color: var(--coral); gap: 0.6rem; }
+
+  /* Chat mockup */
+  .hero-visual {
+    position: relative;
+    animation: fadeInUp 0.8s ease 0.4s both;
+  }
+
+  .chat-window {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 80px rgba(15, 26, 46, 0.1), 0 2px 8px rgba(15, 26, 46, 0.04);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .chat-header {
+    background: var(--navy);
+    padding: 1.2rem 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+
+  .chat-avatar {
+    width: 36px; height: 36px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--coral), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .chat-header-text { color: white; }
+  .chat-header-text h4 { font-size: 0.95rem; font-weight: 600; }
+  .chat-header-text span { font-size: 0.75rem; opacity: 0.6; }
+
+  .chat-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+
+  .msg {
+    max-width: 85%; padding: 0.9rem 1.2rem;
+    border-radius: 18px; font-size: 0.9rem; line-height: 1.5;
+    opacity: 0; animation: msgAppear 0.5s ease forwards;
+  }
+
+  .msg-user {
+    align-self: flex-end;
+    background: var(--navy); color: white;
+    border-bottom-right-radius: 6px;
+    animation-delay: 1s;
+  }
+
+  .msg-ai {
+    align-self: flex-start;
+    background: #F3F4F6; color: var(--dark);
+    border-bottom-left-radius: 6px;
+  }
+
+  .msg-ai:nth-child(2) { animation-delay: 1.8s; }
+  .msg-ai:nth-child(4) { animation-delay: 3.4s; }
+  .msg-user:nth-child(3) { animation-delay: 2.6s; }
+
+  .msg-ai .math {
+    display: inline-block;
+    background: var(--mint); color: var(--deep-teal);
+    padding: 0.15rem 0.5rem; border-radius: 6px;
+    font-family: 'Fraunces', serif; font-weight: 500;
+    margin: 0.2rem 0;
+  }
+
+  @keyframes msgAppear {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chat-input {
+    border-top: 1px solid #F0F0F0;
+    padding: 1rem 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+
+  .chat-input input {
+    flex: 1; border: none; outline: none;
+    font-size: 0.9rem; color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    background: transparent;
+  }
+
+  .chat-input .send-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--coral); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 1.1rem;
+    transition: transform 0.2s;
+  }
+
+  .chat-input .send-btn:hover { transform: scale(1.1); }
+
+  /* Floating math symbols */
+  .math-float {
+    position: absolute;
+    font-family: 'Fraunces', serif;
+    font-weight: 700; opacity: 0.08;
+    animation: mathFloat 10s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes mathFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+  }
+
+  /* ============ FEATURES ============ */
+  .features {
+    padding: 6rem 3rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    color: var(--coral); font-weight: 600; font-size: 0.85rem;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 2.8rem; font-weight: 900;
+    color: var(--dark); margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .section-sub {
+    font-size: 1.1rem; color: var(--muted);
+    max-width: 550px; line-height: 1.6;
+    margin-bottom: 3.5rem;
+  }
+
+  .features-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(27, 42, 74, 0.05);
+    position: relative; overflow: hidden;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(15, 26, 46, 0.08);
+  }
+
+  .feature-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 1.2rem;
+  }
+
+  .feature-card:nth-child(1) .feature-icon { background: #FFF0F0; }
+  .feature-card:nth-child(2) .feature-icon { background: var(--mint); }
+  .feature-card:nth-child(3) .feature-icon { background: #FFF3E0; }
+  .feature-card:nth-child(4) .feature-icon { background: var(--lavender); }
+  .feature-card:nth-child(5) .feature-icon { background: #E3F2FD; }
+  .feature-card:nth-child(6) .feature-icon { background: #FFF8E1; }
+
+  .feature-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem; font-weight: 700;
+    margin-bottom: 0.6rem; color: var(--dark);
+  }
+
+  .feature-card p {
+    font-size: 0.9rem; line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* ============ HOW IT WORKS ============ */
+  .how-it-works {
+    padding: 6rem 3rem;
+    background: var(--dark);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .how-it-works::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(46, 196, 182, 0.1), transparent 70%);
+  }
+
+  .how-inner {
+    max-width: 1200px; margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+
+  .how-it-works .section-label { color: var(--teal); }
+  .how-it-works .section-title { color: white; }
+  .how-it-works .section-sub { color: rgba(255,255,255,0.5); }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .step {
+    position: relative;
+    padding: 2rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .step:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .step-number {
+    font-family: 'Fraunces', serif;
+    font-size: 3rem; font-weight: 900;
+    color: var(--teal); opacity: 0.3;
+    margin-bottom: 0.8rem; line-height: 1;
+  }
+
+  .step h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem; font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+
+  .step p {
+    font-size: 0.9rem; line-height: 1.6;
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* ============ STATS ============ */
+  .stats {
+    padding: 5rem 3rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2rem; text-align: center;
+  }
+
+  .stat-item h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 3rem; font-weight: 900;
+    color: var(--coral); margin-bottom: 0.3rem;
+  }
+
+  .stat-item p {
+    font-size: 0.9rem; color: var(--muted); font-weight: 500;
+  }
+
+  /* ============ PRICING ============ */
+  .pricing {
+    padding: 6rem 3rem;
+  }
+
+  .pricing-inner {
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 3.5rem;
+    align-items: start;
+  }
+
+  .price-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    border: 1px solid rgba(27, 42, 74, 0.06);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .price-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(15, 26, 46, 0.08);
+  }
+
+  .price-card-popular {
+    background: var(--navy);
+    color: white;
+    border: 2px solid var(--teal);
+    transform: scale(1.04);
+    box-shadow: 0 16px 50px rgba(15, 26, 46, 0.15);
+  }
+
+  .price-card-popular:hover {
+    transform: scale(1.04) translateY(-4px);
+    box-shadow: 0 20px 60px rgba(15, 26, 46, 0.2);
+  }
+
+  .popular-tag {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--teal); color: white;
+    padding: 0.3rem 1.2rem; border-radius: 50px;
+    font-size: 0.75rem; font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .price-badge {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .free-badge { color: var(--muted); }
+  .pro-badge { color: var(--teal); }
+  .team-badge { color: var(--coral); }
+
+  .price-amount {
+    font-family: 'Fraunces', serif;
+    font-size: 3.5rem; font-weight: 900;
+    line-height: 1; margin-bottom: 0.5rem;
+  }
+
+  .price-card-popular .price-amount { color: white; }
+
+  .price-amount .currency {
+    font-size: 1.5rem; font-weight: 700;
+    vertical-align: top; margin-right: 2px;
+    position: relative; top: 8px;
+  }
+
+  .price-amount .period {
+    font-size: 1rem; font-weight: 500;
+    color: var(--muted);
+  }
+
+  .price-card-popular .price-amount .period {
+    color: rgba(255,255,255,0.4);
+  }
+
+  .price-desc {
+    font-size: 0.9rem; color: var(--muted);
+    line-height: 1.5; margin-bottom: 1.5rem;
+  }
+
+  .price-card-popular .price-desc {
+    color: rgba(255,255,255,0.5);
+  }
+
+  .price-features {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.7rem;
+    margin-bottom: 2rem;
+  }
+
+  .price-features li {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.9rem; color: var(--navy);
+  }
+
+  .price-card-popular .price-features li { color: rgba(255,255,255,0.8); }
+
+  .price-features .check {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--mint); color: var(--deep-teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 700; flex-shrink: 0;
+  }
+
+  .price-card-popular .price-features .check {
+    background: rgba(46, 196, 182, 0.2); color: var(--teal);
+  }
+
+  .price-features .check.dim {
+    background: #F0F0F0; color: #CCC;
+  }
+
+  .price-card-popular .price-features .check.dim {
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.2);
+  }
+
+  .price-features .dim { color: var(--muted); opacity: 0.5; }
+  .price-card-popular .price-features .dim { color: rgba(255,255,255,0.3); }
+
+  .price-btn {
+    display: block; text-align: center;
+    padding: 0.9rem 1.5rem; border-radius: 50px;
+    text-decoration: none; font-weight: 700; font-size: 0.95rem;
+    transition: all 0.3s ease;
+  }
+
+  .price-btn-outline {
+    border: 2px solid var(--navy); color: var(--navy);
+  }
+
+  .price-btn-outline:hover {
+    background: var(--navy); color: white;
+  }
+
+  .price-btn-solid {
+    background: var(--teal); color: white;
+    box-shadow: 0 4px 15px rgba(46, 196, 182, 0.3);
+  }
+
+  .price-btn-solid:hover {
+    background: var(--deep-teal);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(46, 196, 182, 0.4);
+  }
+
+  /* ============ CTA ============ */
+  .cta {
+    padding: 6rem 3rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .cta-box {
+    max-width: 800px; margin: 0 auto;
+    background: linear-gradient(135deg, var(--navy), var(--dark));
+    border-radius: 32px; padding: 4rem;
+    position: relative; overflow: hidden;
+  }
+
+  .cta-box::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .cta-box h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 2.5rem; font-weight: 900;
+    color: white; margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .cta-box p {
+    color: rgba(255,255,255,0.6);
+    font-size: 1.1rem; margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .cta-box .btn-primary {
+    position: relative;
+    background: var(--teal);
+    box-shadow: 0 4px 20px rgba(46, 196, 182, 0.3);
+  }
+
+  .cta-box .btn-primary:hover {
+    background: var(--deep-teal);
+    box-shadow: 0 8px 30px rgba(46, 196, 182, 0.4);
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    padding: 3rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(27, 42, 74, 0.06);
+  }
+
+  footer .logo {
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ============ ANIMATIONS ============ */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .hero-content { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 3rem; }
+    .features-grid, .steps { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .price-card-popular { transform: scale(1); }
+    .price-card-popular:hover { transform: translateY(-4px); }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links a:not(.btn-nav) { display: none; }
+    .hero, .features, .how-it-works, .cta { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">solvy<span class="dot">.</span>ai</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="pricing.html">Pricing</a>
+    <a class="btn-nav" href="learning.html">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-shapes">
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+  </div>
+
+  <div class="hero-content">
+    <div>
+      <div class="hero-tag">
+        <span class="pulse"></span>
+        AI-Powered Math Tutor
+      </div>
+      <h1>
+        Finally, math<br>
+        <span class="highlight">makes sense.</span>
+      </h1>
+      <p class="hero-desc">
+        Solvy is your personal AI math tutor. Bite-sized lessons, practice problems, and a chat tutor that helps you think — not just copy answers.
+      </p>
+      <div class="hero-actions">
+        <a href="learning.html" class="btn-primary">Start Learning →</a>
+        <a href="concept.html" class="btn-secondary">See how it works <span>→</span></a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="math-float" style="top: -20px; left: 20px; font-size: 3rem;">∑</div>
+      <div class="math-float" style="bottom: -10px; right: 30px; font-size: 2.5rem; animation-delay: -3s;">π</div>
+      <div class="math-float" style="top: 40%; right: -15px; font-size: 2rem; animation-delay: -6s;">∫</div>
+
+      <div class="chat-window">
+        <div class="chat-header">
+          <div class="chat-avatar">🧠</div>
+          <div class="chat-header-text">
+            <h4>Solvy</h4>
+            <span>Always here to help</span>
+          </div>
+        </div>
+        <div class="chat-body">
+          <div class="msg msg-user">I don't get how to solve 2x + 5 = 15</div>
+          <div class="msg msg-ai">No worries! Let's work through it. What operation would undo the <span class="math">+ 5</span> on the left side? 🤔</div>
+          <div class="msg msg-user">Subtract 5 from both sides?</div>
+          <div class="msg msg-ai">Exactly! So now you have <span class="math">2x = 10</span>. What's the next step to get x alone?</div>
+        </div>
+        <div class="chat-input">
+          <input type="text" placeholder="Type your math question..." disabled>
+          <button class="send-btn">↑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="reveal">
+    <div class="section-label">✦ Features</div>
+    <h2 class="section-title">Everything you need<br>to master math.</h2>
+    <p class="section-sub">No more confusing textbooks or expensive tutors. Solvy gives you a complete learning experience in one place.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">💬</div>
+      <h3>AI Chat Tutor</h3>
+      <p>Ask anything and get guided step-by-step. Solvy gives hints, not answers — so you actually learn.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">📖</div>
+      <h3>Bite-Sized Lessons</h3>
+      <p>Clear, simple explanations for every topic. No jargon, no walls of text — just the concepts you need.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🎯</div>
+      <h3>Practice Problems</h3>
+      <p>Problems matched to your level with instant feedback. Get harder as you improve, easier when you're stuck.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">📊</div>
+      <h3>Progress Tracking</h3>
+      <p>See your strengths and weak spots at a glance. Know exactly where to focus your time.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🧩</div>
+      <h3>Adaptive Difficulty</h3>
+      <p>The AI adjusts to you. Struggling? It slows down. Flying through? It challenges you more.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">⚡</div>
+      <h3>Available 24/7</h3>
+      <p>Stuck at midnight before an exam? Solvy is always there — patient, judgment-free, and ready to help.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="how">
+  <div class="how-inner">
+    <div class="reveal">
+      <div class="section-label">✦ How it works</div>
+      <h2 class="section-title">Three steps to<br>understanding math.</h2>
+      <p class="section-sub">It's as simple as having a conversation.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-number">01</div>
+        <h3>Pick your topic</h3>
+        <p>Choose from algebra, geometry, calculus, and more. Each topic has lessons broken into small, digestible chunks.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-number">02</div>
+        <h3>Learn & practice</h3>
+        <p>Read the lesson, then solve practice problems. The AI watches your progress and adapts the difficulty in real time.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-number">03</div>
+        <h3>Ask when stuck</h3>
+        <p>Open the AI tutor anytime. It won't give you the answer — it'll guide you there with smart hints and questions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats reveal">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <h2>10+</h2>
+      <p>Math topics covered</p>
+    </div>
+    <div class="stat-item">
+      <h2>24/7</h2>
+      <p>Always available</p>
+    </div>
+    <div class="stat-item">
+      <h2>3</h2>
+      <p>Flexible plans</p>
+    </div>
+    <div class="stat-item">
+      <h2>AI</h2>
+      <p>Smart tutoring engine</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-inner">
+    <div class="reveal" style="text-align:center;">
+      <div class="section-label">✦ Pricing</div>
+      <h2 class="section-title">Pick the plan that<br>fits your goals.</h2>
+      <p class="section-sub">Start with the free plan and upgrade when you're ready for more.</p>
+    </div>
+
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <div class="price-badge free-badge">Starter</div>
+        <div class="price-amount"><span class="currency">€</span>0<span class="period">/mo</span></div>
+        <p class="price-desc">Get started and see if Solvy is right for you.</p>
+        <ul class="price-features">
+          <li><span class="check">✓</span> 3 lessons per week</li>
+          <li><span class="check">✓</span> 5 AI tutor messages/day</li>
+          <li><span class="check">✓</span> Basic practice problems</li>
+          <li><span class="check dim">—</span> <span class="dim">Adaptive difficulty</span></li>
+          <li><span class="check dim">—</span> <span class="dim">Progress tracking</span></li>
+        </ul>
+        <a href="pricing.html" class="price-btn price-btn-outline">Get Started</a>
+      </div>
+
+      <div class="price-card price-card-popular">
+        <div class="popular-tag">Most Popular</div>
+        <div class="price-badge pro-badge">Pro</div>
+        <div class="price-amount"><span class="currency">€</span>9<span class="period">/mo</span></div>
+        <p class="price-desc">Everything you need to master math.</p>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Unlimited lessons</li>
+          <li><span class="check">✓</span> Unlimited AI tutor chat</li>
+          <li><span class="check">✓</span> Adaptive difficulty</li>
+          <li><span class="check">✓</span> Full progress tracking</li>
+          <li><span class="check">✓</span> All math topics</li>
+        </ul>
+        <a href="pricing.html" class="price-btn price-btn-solid">Start Pro</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-badge team-badge">Classroom</div>
+        <div class="price-amount"><span class="currency">€</span>29<span class="period">/mo</span></div>
+        <p class="price-desc">For teachers and study groups up to 30 students.</p>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Everything in Pro</li>
+          <li><span class="check">✓</span> Up to 30 student seats</li>
+          <li><span class="check">✓</span> Teacher dashboard</li>
+          <li><span class="check">✓</span> Class progress overview</li>
+          <li><span class="check">✓</span> Priority support</li>
+        </ul>
+        <a href="pricing.html" class="price-btn price-btn-outline">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="cta-box reveal">
+    <h2>Ready to finally<br>get math?</h2>
+    <p>Join Solvy and start learning with your personal AI tutor today.</p>
+    <a href="pricing.html" class="btn-primary">See Plans →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">solvy<span class="dot">.</span>ai</div>
+  <p>Making math accessible for everyone.</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

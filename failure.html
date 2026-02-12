@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solvy.ai — When AI Tutoring Fails</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FFF8F0;
+      --warm-white: #FFFDF9;
+      --peach: #FFD6BA;
+      --coral: #FF6B6B;
+      --deep-coral: #E84545;
+      --teal: #2EC4B6;
+      --deep-teal: #1A9E93;
+      --navy: #1B2A4A;
+      --dark: #0F1A2E;
+      --muted: #6B7B8D;
+      --lavender: #E8DEFF;
+      --mint: #D0F5EC;
+      --gold: #FFD166;
+
+      --blue: #2F6BFF;
+      --blue-soft: #EAF0FF;
+      --border: rgba(27, 42, 74, 0.08);
+      --shadow: 0 20px 40px rgba(27, 42, 74, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--navy);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.2rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255, 248, 240, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(27, 42, 74, 0.06);
+    }
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-weight: 900; font-size: 1.6rem;
+      color: var(--navy);
+      display: flex; align-items: center; gap: 0.4rem;
+      text-decoration: none;
+    }
+    .logo .dot { color: var(--coral); }
+    .nav-links { display: flex; gap: 2.2rem; align-items: center; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-weight: 600; font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--navy); }
+    .btn-nav {
+      background: var(--navy); color: white;
+      padding: 0.6rem 1.4rem; border-radius: 50px;
+      text-decoration: none; font-weight: 700; font-size: 0.9rem;
+      transition: all 0.25s ease;
+    }
+    .btn-nav:hover { background: var(--dark); transform: translateY(-1px); }
+
+    /* PAGE */
+    .page { padding: 8.5rem 3rem 5rem; max-width: 1100px; margin: 0 auto; }
+
+    .hero {
+      background: linear-gradient(180deg, rgba(47,107,255,0.10), rgba(255,255,255,0));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 3.2rem 3rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      right: -140px; top: -180px;
+      background: radial-gradient(circle, rgba(47,107,255,0.18), transparent 70%);
+      pointer-events:none;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      font-weight: 800;
+      color: var(--blue);
+      background: var(--blue-soft);
+      padding: .45rem .9rem;
+      border-radius: 999px;
+      margin-bottom: 1.2rem;
+      letter-spacing: .02em;
+      font-size: .9rem;
+    }
+    .kicker .arrow { font-size: 1.1rem; transform: translateY(-1px); }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 3.2rem;
+      line-height: 1.12;
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+    .sub { max-width: 820px; color: var(--muted); font-size: 1.15rem; margin-bottom: 1.6rem; }
+
+    .thesis {
+      margin-top: 1.2rem;
+      padding: 1.2rem 1.4rem;
+      border-radius: 18px;
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .thesis .icon {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,107,107,0.12);
+      color: var(--deep-coral);
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+    .thesis strong { color: var(--navy); }
+    .thesis p { color: var(--muted); }
+
+    .grid {
+      margin-top: 2.8rem;
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 1.8rem;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      padding: 1.4rem 1.6rem;
+      border-bottom: 1px solid rgba(27, 42, 74, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .card-title { font-family: 'Fraunces', serif; font-weight: 900; font-size: 1.55rem; }
+    .pill {
+      font-weight: 800;
+      font-size: .78rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .35rem .7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(47,107,255,0.22);
+      background: rgba(47,107,255,0.10);
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    /* Accordion */
+    .cases { padding: 0.6rem 0.8rem 1rem; }
+    .case {
+      border-radius: 18px;
+      border: 1px solid rgba(27, 42, 74, 0.07);
+      overflow: hidden;
+      margin: .85rem;
+      background: #fff;
+    }
+    .case button {
+      width: 100%;
+      text-align: left;
+      padding: 1.2rem 1.2rem;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 42px 1fr 24px;
+      gap: 1rem;
+      align-items: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .badge {
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900;
+      color: white;
+    }
+    .b-red { background: var(--coral); }
+    .b-gold { background: var(--gold); color: #3b2a00; }
+    .b-blue { background: var(--blue); }
+
+    .case h3 { font-size: 1.05rem; font-weight: 900; margin-bottom: .15rem; }
+    .case .hint { font-size: .95rem; color: var(--muted); font-weight: 600; }
+    .chev { font-weight: 900; color: var(--muted); transition: transform .2s ease; font-size: 1.1rem; }
+
+    .panel { display: none; padding: 0 1.2rem 1.2rem 1.2rem; color: var(--navy); }
+    .row { margin-top: .8rem; display: grid; grid-template-columns: 1fr; gap: .8rem; }
+    .box {
+      border-radius: 16px;
+      border: 1px solid rgba(27, 42, 74, 0.08);
+      padding: 1rem 1rem;
+      background: rgba(255,255,255,0.9);
+    }
+    .label { display: inline-flex; align-items: center; gap: .5rem; font-weight: 900; font-size: .9rem; margin-bottom: .35rem; }
+    .label .x { color: var(--deep-coral); font-weight: 900; }
+    .label .ok { color: var(--deep-teal); font-weight: 900; }
+    .box p { color: var(--muted); font-weight: 600; }
+    .case.open .panel { display: block; }
+    .case.open .chev { transform: rotate(180deg); }
+
+    /* Safeguards */
+    .side { padding: 1.3rem 1.4rem 1.5rem; }
+    .side h4 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin-bottom: .9rem;
+    }
+    .side p { color: var(--muted); font-weight: 600; margin-bottom: 1rem; }
+    .s-list { list-style: none; display: grid; gap: .75rem; }
+    .s-list li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: .7rem;
+      align-items: start;
+      padding: .85rem .9rem;
+      border-radius: 16px;
+      border: 1px solid rgba(27, 42, 74, 0.07);
+      background: #fff;
+    }
+    .tick {
+      width: 28px; height: 28px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900;
+      background: rgba(46,196,182,0.14);
+      color: var(--deep-teal);
+    }
+    .s-list strong { display:block; font-weight: 900; margin-bottom: .1rem; }
+    .s-list span { color: var(--muted); font-weight: 600; font-size: .95rem; }
+
+    /* Source + CTA */
+    .source {
+      margin-top: 2.2rem;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .95rem;
+      padding: 1.1rem 1.2rem;
+      border-radius: 18px;
+      border: 1px solid rgba(27, 42, 74, 0.07);
+      background: rgba(255,255,255,0.7);
+    }
+    .cta {
+      margin-top: 1.6rem;
+      background: var(--peach);
+      border-radius: 26px;
+      padding: 2.2rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1.2rem;
+      align-items: center;
+      border: 1px solid rgba(27, 42, 74, 0.06);
+    }
+    .cta h2 {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: 2rem;
+      line-height: 1.2;
+      margin-bottom: .35rem;
+    }
+    .cta p { color: rgba(27,42,74,0.80); font-weight: 650; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      text-decoration: none;
+      padding: 1rem 1.35rem;
+      border-radius: 999px;
+      font-weight: 900;
+      background: var(--navy);
+      color: #fff;
+      transition: transform .15s ease, background .2s ease;
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--dark); transform: translateY(-1px); }
+    .btn .arr { font-size: 1.15rem; }
+
+    /* ===== Interactive Q&A demo (real interaction) ===== */
+    .demo-wrap {
+      margin-top: 2.4rem;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(27, 42, 74, 0.07);
+      border-radius: 22px;
+      padding: 1.6rem;
+    }
+    .demo-top {
+      display:flex; align-items:flex-start; justify-content:space-between; gap:1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.1rem;
+    }
+    .demo-top h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: 1.9rem;
+      margin-bottom: .25rem;
+    }
+    .demo-top p {
+      color: var(--muted);
+      font-weight: 600;
+      max-width: 720px;
+    }
+    .demo-controls {
+      display:flex; gap:.7rem; align-items:center; flex-wrap:wrap;
+    }
+    .demo-select {
+      appearance: none;
+      border: 1px solid rgba(27, 42, 74, 0.15);
+      background: white;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      color: var(--navy);
+      min-width: 360px;
+      outline: none;
+    }
+    .demo-select:focus {
+      box-shadow: 0 0 0 3px rgba(47,107,255,0.18);
+      border-color: rgba(47,107,255,0.55);
+    }
+    .demo-btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 0.9rem 1.05rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 900;
+      background: var(--navy);
+      color: white;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+    .demo-btn:hover { background: var(--dark); transform: translateY(-1px); }
+    .demo-btn.secondary {
+      background: transparent;
+      border: 1px solid rgba(27, 42, 74, 0.18);
+      color: var(--navy);
+    }
+    .demo-btn:disabled { opacity: .55; cursor: not-allowed; transform:none; }
+
+    .demo-grid {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+      margin-top: 1.1rem;
+    }
+    .demo-card {
+      background:white;
+      border: 1px solid rgba(27, 42, 74, 0.10);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .demo-head {
+      padding: .95rem 1rem;
+      display:flex; align-items:center; justify-content:space-between; gap:.75rem;
+      background: rgba(27,42,74,0.04);
+    }
+    .demo-title { font-weight: 900; font-size: .95rem; }
+    .demo-tag {
+      font-size: .75rem;
+      font-weight: 900;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: .28rem .55rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .tag-bad { background: rgba(255, 107, 107, 0.18); color: var(--deep-coral); }
+    .tag-good { background: rgba(46, 196, 182, 0.18); color: var(--deep-teal); }
+
+    .demo-body {
+      padding: 1rem;
+      min-height: 220px;
+      white-space: pre-wrap;
+      font-weight: 650;
+      color: var(--navy);
+    }
+    .demo-body .muted { color: var(--muted); font-weight: 650; }
+    .cursor {
+      display:inline-block;
+      width: 9px;
+      height: 1.1em;
+      background: rgba(27,42,74,0.25);
+      margin-left: 3px;
+      transform: translateY(2px);
+      animation: blink 1s infinite;
+      border-radius: 2px;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    footer {
+      margin-top: 2.5rem;
+      padding: 2rem 0 0;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .9rem;
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      nav { padding: 1.1rem 1.4rem; }
+      .nav-links { display: none; }
+      .page { padding: 7.6rem 1.4rem 4rem; }
+      .hero { padding: 2.4rem 1.4rem; }
+      h1 { font-size: 2.5rem; }
+      .grid { grid-template-columns: 1fr; }
+      .cta { grid-template-columns: 1fr; }
+      .demo-grid { grid-template-columns: 1fr; }
+      .demo-select { min-width: 260px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="./concept.html" class="logo">Solvy<span class="dot">.</span>ai</a>
+    <div class="nav-links">
+      <a href="./concept.html#how">How it works</a>
+      <a href="./concept.html#why">Why Solvy</a>
+      <a href="./concept.html#simulation">Simulation</a>
+      <a href="./failure.html">When AI fails</a>
+    </div>
+    <a href="./concept.html" class="btn-nav">Back to main</a>
+  </nav>
+
+  <main class="page">
+    <section class="hero">
+      <div class="kicker"><span class="arrow">➜</span> Important: credibility comes from limitations</div>
+      <h1>When AI tutoring fails</h1>
+      <p class="sub">
+        The biggest risk of AI in education is not “being wrong” once.
+        It’s pushing students toward superficial learning: fast answers, low reflection, and false confidence.
+      </p>
+
+      <div class="thesis" role="note" aria-label="Thesis">
+        <div class="icon">!</div>
+        <div>
+          <p>
+            <strong>Key idea:</strong> a good AI tutor must be designed to <strong>teach, not tell</strong>.
+            That means structured hints, step-by-step reasoning, and safeguards that reduce hallucinations and dependency.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card" aria-label="Failure cases">
+          <div class="card-header">
+            <div class="card-title">Three common failure modes</div>
+            <div class="pill">Tap to expand</div>
+          </div>
+
+          <div class="cases">
+            <div class="case" data-case="1">
+              <button type="button" aria-expanded="false">
+                <div class="badge b-red">1</div>
+                <div>
+                  <h3>Instant answers that skip thinking</h3>
+                  <div class="hint">Students get a result, but don’t build skill.</div>
+                </div>
+                <div class="chev">⌄</div>
+              </button>
+
+              <div class="panel">
+                <div class="row">
+                  <div class="box">
+                    <div class="label"><span class="x">✕</span> What goes wrong</div>
+                    <p>
+                      The model delivers the final answer quickly. The student “finishes” the task, but learns nothing reusable.
+                      Over time this creates dependency: the student asks more, thinks less.
+                    </p>
+                  </div>
+                  <div class="box">
+                    <div class="label"><span class="ok">✓</span> How Solvy avoids this</div>
+                    <p>
+                      Solvy defaults to guided hints (Socratic prompts + step-level checks). It can refuse to give final answers
+                      and instead “unlock” the next step only after the student attempts it.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="case" data-case="2">
+              <button type="button" aria-expanded="false">
+                <div class="badge b-gold">2</div>
+                <div>
+                  <h3>Correct but useless explanations</h3>
+                  <div class="hint">Right words, wrong level: too hard or too vague.</div>
+                </div>
+                <div class="chev">⌄</div>
+              </button>
+
+              <div class="panel">
+                <div class="row">
+                  <div class="box">
+                    <div class="label"><span class="x">✕</span> What goes wrong</div>
+                    <p>
+                      The content is technically correct but mismatched to the student’s level.
+                      This looks “smart” but fails pedagogically: students can’t apply it.
+                    </p>
+                  </div>
+                  <div class="box">
+                    <div class="label"><span class="ok">✓</span> How Solvy avoids this</div>
+                    <p>
+                      Solvy checks the student’s current understanding (micro-questions) and adapts: same concept,
+                      different explanation style, pace, and difficulty—without changing the goal.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="case" data-case="3">
+              <button type="button" aria-expanded="false">
+                <div class="badge b-blue">3</div>
+                <div>
+                  <h3>Hallucinated steps in math</h3>
+                  <div class="hint">One wrong step can destroy trust and learning.</div>
+                </div>
+                <div class="chev">⌄</div>
+              </button>
+
+              <div class="panel">
+                <div class="row">
+                  <div class="box">
+                    <div class="label"><span class="x">✕</span> What goes wrong</div>
+                    <p>
+                      The model “sounds confident” but inserts a wrong transformation or skips a constraint.
+                      Students either copy it or get confused and assume they’re the problem.
+                    </p>
+                  </div>
+                  <div class="box">
+                    <div class="label"><span class="ok">✓</span> How Solvy avoids this</div>
+                    <p>
+                      Solvy uses structured reasoning and step-level verification: it asks the student to confirm each step,
+                      and it can run deterministic checks before presenting a final conclusion.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <aside class="card side" aria-label="Solvy safeguards">
+          <h4>Solvy safeguards</h4>
+          <p>These are the design choices that turn “AI answers” into real tutoring.</p>
+
+          <ul class="s-list">
+            <li>
+              <div class="tick">✓</div>
+              <div>
+                <strong>Teach, not tell</strong>
+                <span>Hints first. Answers last (or never), depending on context.</span>
+              </div>
+            </li>
+            <li>
+              <div class="tick">✓</div>
+              <div>
+                <strong>Step-level checks</strong>
+                <span>Detects errors early, before they become confusion.</span>
+              </div>
+            </li>
+            <li>
+              <div class="tick">✓</div>
+              <div>
+                <strong>Level matching</strong>
+                <span>Explanation style adapts to the student, not the opposite.</span>
+              </div>
+            </li>
+            <li>
+              <div class="tick">✓</div>
+              <div>
+                <strong>Consistency</strong>
+                <span>Same rules, same quality: no mood, no fatigue, no “bad day”.</span>
+              </div>
+            </li>
+          </ul>
+        </aside>
+      </div>
+
+      <div class="source" aria-label="Source">
+        <strong>Source inspiration:</strong> Concepts adapted from research-oriented discussion on AI tutoring design and pedagogy.
+        Author cited in your transcript: <strong>Mary Burns</strong>, Consultant — <strong>Brookings Global Task Force on AI in Education</strong>.
+      </div>
+
+      <!-- ===== Real interactive simulation (3 questions) ===== -->
+      <div class="demo-wrap" aria-label="Interactive tutoring demo">
+        <div class="demo-top">
+          <div>
+            <h3>Interactive tutoring simulation</h3>
+            <p>Pick a math question. You’ll see how a generic chatbot responds vs. how Solvy teaches (hint-first, step-by-step).</p>
+          </div>
+
+          <div class="demo-controls">
+            <select id="demo-q" class="demo-select" aria-label="Choose a math question">
+              <option value="q1">Solve: x² − 5x + 6 = 0</option>
+              <option value="q2">Differentiate: f(x) = (3x² − 2x) / x</option>
+              <option value="q3">Probability: 4 coin flips. P(exactly 3 heads)?</option>
+            </select>
+
+            <button id="demo-run" class="demo-btn" type="button">Run demo</button>
+            <button id="demo-reset" class="demo-btn secondary" type="button">Reset</button>
+          </div>
+        </div>
+
+        <div class="demo-grid">
+          <div class="demo-card" aria-label="Generic AI response">
+            <div class="demo-head">
+              <div class="demo-title">Generic AI</div>
+              <div class="demo-tag tag-bad">Answer-first</div>
+            </div>
+            <div class="demo-body" id="demo-generic"><span class="muted">Click “Run demo” to start.</span></div>
+          </div>
+
+          <div class="demo-card" aria-label="Solvy response">
+            <div class="demo-head">
+              <div class="demo-title">Solvy AI</div>
+              <div class="demo-tag tag-good">Teach-not-tell</div>
+            </div>
+            <div class="demo-body" id="demo-solvy"><span class="muted">Click “Run demo” to start.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta" aria-label="Call to action">
+        <div>
+          <h2>Fast answers are easy. Better learning is engineered.</h2>
+          <p>Solvy is designed around pedagogy: structured hints, adaptive pacing, and safeguards that reduce mistakes and dependency.</p>
+        </div>
+        <a class="btn" href="./concept.html#simulation">
+          <span>See the main simulation</span>
+          <span class="arr">➜</span>
+        </a>
+      </div>
+
+      <footer>
+        © 2026 Solvy.ai — “Teach, not tell.”
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    // Accordion
+    const cases = document.querySelectorAll('.case');
+    cases.forEach((c) => {
+      const btn = c.querySelector('button');
+      btn.addEventListener('click', () => {
+        const isOpen = c.classList.contains('open');
+        cases.forEach(x => {
+          x.classList.remove('open');
+          x.querySelector('button').setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) {
+          c.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // ===== Interactive tutoring demo data =====
+    const demoData = {
+      q1: {
+        generic:
+`Solve x² − 5x + 6 = 0.
+Factor: (x − 2)(x − 3) = 0.
+So x = 2 or x = 3.`,
+        solvy:
+`Let’s do it step by step.
+
+1) Goal: find x values that make x² − 5x + 6 = 0 true.
+
+2) Try factoring:
+We want two numbers that:
+- multiply to +6
+- add to −5
+
+Which pair works? (−2 and −3)
+
+3) Rewrite:
+x² − 5x + 6 = (x − 2)(x − 3)
+
+4) Zero-product rule:
+If (x − 2)(x − 3) = 0, then:
+x − 2 = 0  OR  x − 3 = 0
+
+So:
+x = 2  OR  x = 3
+
+Quick check:
+2² − 5·2 + 6 = 4 − 10 + 6 = 0 ✓
+3² − 5·3 + 6 = 9 − 15 + 6 = 0 ✓`
+      },
+      q2: {
+        generic:
+`Differentiate f(x) = (3x² − 2x)/x.
+Simplify: f(x) = 3x − 2.
+So f'(x) = 3.`,
+        solvy:
+`First, I’ll simplify carefully (this avoids mistakes).
+
+Given:
+f(x) = (3x² − 2x) / x
+
+Step 1) Split the fraction:
+f(x) = (3x²)/x − (2x)/x
+
+Step 2) Simplify each term:
+(3x²)/x = 3x
+(2x)/x = 2
+So:
+f(x) = 3x − 2   (valid for x ≠ 0)
+
+Step 3) Differentiate:
+d/dx(3x) = 3
+d/dx(−2) = 0
+
+Therefore:
+f'(x) = 3
+
+Mini-check:
+After simplification the function is linear, so a constant derivative makes sense.`
+      },
+      q3: {
+        generic:
+`P(exactly 3 heads in 4 flips) = C(4,3)·(1/2)^3·(1/2)^1 = 4/16 = 1/4.`,
+        solvy:
+`Let’s build the logic (so you can reuse it later).
+
+We flip a fair coin 4 times.
+We want exactly 3 heads.
+
+Step 1) Count how many sequences:
+Number of ways to choose which 3 flips are heads:
+C(4,3) = 4
+
+Step 2) Probability of one specific sequence:
+Each flip has probability 1/2.
+A specific sequence of 4 flips has probability:
+(1/2)^4 = 1/16
+
+Step 3) Multiply:
+Total probability = 4 · (1/16) = 4/16 = 1/4
+
+Final answer:
+P = 1/4 = 0.25`
+      }
+    };
+
+    const qSelect = document.getElementById('demo-q');
+    const runBtn = document.getElementById('demo-run');
+    const resetBtn = document.getElementById('demo-reset');
+    const genericBox = document.getElementById('demo-generic');
+    const solvyBox = document.getElementById('demo-solvy');
+
+    let typingTimers = [];
+
+    function clearTimers() {
+      typingTimers.forEach(t => clearTimeout(t));
+      typingTimers = [];
+    }
+
+    function setBox(el, text) {
+      el.textContent = text;
+    }
+
+    function typeInto(el, text, speed = 12) {
+      el.textContent = "";
+      const cursor = document.createElement("span");
+      cursor.className = "cursor";
+      el.appendChild(cursor);
+
+      let i = 0;
+      const step = () => {
+        if (i >= text.length) {
+          cursor.remove();
+          return;
+        }
+        // Insert next char before cursor
+        cursor.insertAdjacentText("beforebegin", text[i]);
+        i++;
+        typingTimers.push(setTimeout(step, speed));
+      };
+      step();
+    }
+
+    function resetDemo() {
+      clearTimers();
+      runBtn.disabled = false;
+      setBox(genericBox, "Click “Run demo” to start.");
+      genericBox.innerHTML = '<span class="muted">Click “Run demo” to start.</span>';
+      solvyBox.innerHTML = '<span class="muted">Click “Run demo” to start.</span>';
+    }
+
+    runBtn.addEventListener('click', () => {
+      clearTimers();
+      runBtn.disabled = true;
+
+      const key = qSelect.value;
+      const data = demoData[key];
+
+      // typing: generic first, then solvy slightly later
+      typeInto(genericBox, data.generic, 10);
+      typingTimers.push(setTimeout(() => typeInto(solvyBox, data.solvy, 9), 700));
+
+      // re-enable after a reasonable time (based on text length)
+      const approx = Math.max(data.generic.length, data.solvy.length) * 9;
+      typingTimers.push(setTimeout(() => { runBtn.disabled = false; }, Math.min(18000, approx + 1200)));
+    });
+
+    resetBtn.addEventListener('click', resetDemo);
+  </script>
+
+</body>
+</html>

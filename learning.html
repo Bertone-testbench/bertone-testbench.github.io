@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn — solvy.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --coral: #FF6B6B;
+    --deep-coral: #E84545;
+    --teal: #2EC4B6;
+    --deep-teal: #1A9E93;
+    --navy: #1B2A4A;
+    --dark: #0F1A2E;
+    --muted: #6B7B8D;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    display: flex; flex-direction: column;
+  }
+
+  /* ============ NAV ============ */
+  nav {
+    padding: 0.8rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--navy);
+    flex-shrink: 0;
+    z-index: 10;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 900; font-size: 1.4rem;
+    color: white; text-decoration: none;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+
+  .logo .dot { color: var(--coral); }
+
+  .nav-center {
+    display: flex; align-items: center; gap: 0.6rem;
+    color: white;
+  }
+
+  .nav-topic {
+    font-weight: 600; font-size: 0.95rem;
+  }
+
+  .nav-divider {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+  }
+
+  .nav-lesson {
+    font-size: 0.85rem; color: rgba(255,255,255,0.6);
+  }
+
+  .nav-right {
+    display: flex; align-items: center; gap: 1rem;
+  }
+
+  .nav-btn {
+    padding: 0.5rem 1.2rem; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+
+  .nav-btn-ghost {
+    color: rgba(255,255,255,0.7);
+  }
+
+  .nav-btn-ghost:hover { color: white; }
+
+  .nav-btn-accent {
+    background: var(--coral); color: white;
+  }
+
+  .nav-btn-accent:hover {
+    background: var(--deep-coral);
+  }
+
+  /* ============ MAIN LAYOUT ============ */
+  .layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    overflow: hidden;
+  }
+
+  .panel-course {
+    overflow: hidden;
+    border-right: 1px solid rgba(27, 42, 74, 0.08);
+  }
+
+  .panel-sidebar {
+    overflow: hidden;
+    background: white;
+  }
+
+  .panel-course iframe,
+  .panel-sidebar iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* ============ SIDEBAR TOGGLE (mobile) ============ */
+  .sidebar-toggle {
+    display: none;
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--navy); color: white;
+    border: none; cursor: pointer; z-index: 20;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 20px rgba(15, 26, 46, 0.25);
+    transition: all 0.3s;
+  }
+
+  .sidebar-toggle:hover {
+    background: var(--coral);
+    transform: scale(1.05);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+      position: relative;
+    }
+
+    .panel-sidebar {
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 340px;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: -4px 0 30px rgba(15, 26, 46, 0.1);
+      z-index: 15;
+    }
+
+    .panel-sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+
+    .nav-center { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">solvy<span class="dot">.</span>ai</a>
+  <div class="nav-center">
+    <span class="nav-topic">Algebra</span>
+    <span class="nav-divider"></span>
+    <span class="nav-lesson">Solving Linear Equations</span>
+  </div>
+  <div class="nav-right">
+    <a href="index.html" class="nav-btn nav-btn-ghost">← Home</a>
+    <a href="pricing.html" class="nav-btn nav-btn-accent">Upgrade</a>
+  </div>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+  <div class="panel-course">
+    <iframe src="course.html" title="Course Content"></iframe>
+  </div>
+  <div class="panel-sidebar" id="sidebar">
+    <iframe src="sidebar.html" title="AI Tutor Sidebar"></iframe>
+  </div>
+</div>
+
+<!-- Mobile sidebar toggle -->
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">🧠</button>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

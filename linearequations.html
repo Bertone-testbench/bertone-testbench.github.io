@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solving Linear Equations</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --warm-white: #FFFDF9;
+    --peach: #FFD6BA;
+    --coral: #FF6B6B;
+    --deep-coral: #E84545;
+    --teal: #2EC4B6;
+    --deep-teal: #1A9E93;
+    --navy: #1B2A4A;
+    --dark: #0F1A2E;
+    --muted: #6B7B8D;
+    --lavender: #E8DEFF;
+    --mint: #D0F5EC;
+    --gold: #FFD166;
+    --surface: #FFFFFF;
+    --border: rgba(27, 42, 74, 0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    overflow-x: hidden;
+  }
+
+  /* ============ LAYOUT ============ */
+  .course-layout {
+    min-height: 100vh;
+    padding-top: 2rem;
+  }
+
+  /* ============ MAIN CONTENT ============ */
+  .main {
+    padding: 3rem 1.5rem;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* Lesson header */
+  .lesson-header {
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 0.6s ease both;
+  }
+  .lesson-tag {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,107,107,0.1); color: var(--coral);
+    padding: 0.3rem 0.9rem; border-radius: 50px;
+    font-size: 0.8rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+  .lesson-title {
+    font-family: 'Fraunces', serif;
+    font-size: 2.8rem; font-weight: 900;
+    color: var(--dark); line-height: 1.15;
+    margin-bottom: 0.8rem;
+  }
+  .lesson-meta {
+    display: flex; gap: 1.5rem; align-items: center;
+    font-size: 0.88rem; color: var(--muted);
+  }
+  .lesson-meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+  /* Content blocks */
+  .content-block {
+    animation: fadeInUp 0.6s ease both;
+  }
+  .content-block + .content-block { margin-top: 2.5rem; }
+  .block-label {
+    font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--coral);
+    margin-bottom: 0.8rem;
+  }
+  .prose {
+    font-size: 1.05rem; line-height: 1.75;
+    color: var(--navy); 
+  }
+  .prose p + p { margin-top: 1rem; }
+  .prose strong { font-weight: 700; color: var(--dark); }
+
+  /* Key concept card */
+  .concept-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 1.8rem 2rem;
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--coral), var(--teal));
+  }
+  .concept-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--dark); margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .concept-card p {
+    font-size: 0.95rem; line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* Math display */
+  .math-display {
+    background: var(--dark);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .math-display::after {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,196,182,0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .math-display .eq-label {
+    font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 0.8rem;
+  }
+  .math-display .equation {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem; font-weight: 700;
+    color: white; letter-spacing: 0.02em;
+    position: relative; z-index: 1;
+  }
+  .math-display .equation .var {
+    color: var(--coral);
+  }
+  .math-display .equation .result {
+    color: var(--teal);
+  }
+
+  /* Step-by-step */
+  .steps-block {
+    display: flex; flex-direction: column; gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .step-row {
+    display: flex; gap: 1.2rem; align-items: flex-start;
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 1.2rem 1.5rem;
+    transition: all 0.2s ease;
+  }
+  .step-row:hover {
+    border-color: rgba(255,107,107,0.2);
+    box-shadow: 0 4px 16px rgba(15,26,46,0.05);
+  }
+  .step-num {
+    width: 32px; height: 32px; flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--coral), var(--deep-coral));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 900; font-size: 0.9rem;
+    margin-top: 1px;
+  }
+  .step-body { flex: 1; }
+  .step-body h4 {
+    font-weight: 700; font-size: 0.95rem;
+    color: var(--dark); margin-bottom: 0.3rem;
+  }
+  .step-body p { font-size: 0.88rem; line-height: 1.6; color: var(--muted); }
+  .step-math {
+    margin-top: 0.7rem;
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--navy);
+    display: inline-block;
+  }
+  .step-math .hl { color: var(--coral); }
+  .step-math .hl2 { color: var(--teal); }
+
+  /* Callout box */
+  .callout {
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    display: flex; gap: 0.9rem; align-items: flex-start;
+    margin-top: 1.5rem;
+    font-size: 0.9rem; line-height: 1.6;
+  }
+  .callout-tip {
+    background: rgba(46,196,182,0.08);
+    border: 1px solid rgba(46,196,182,0.2);
+    color: var(--dark);
+  }
+  .callout-warn {
+    background: rgba(255,209,102,0.1);
+    border: 1px solid rgba(255,209,102,0.3);
+    color: var(--dark);
+  }
+  .callout-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+
+  /* ============ PRACTICE ============ */
+  .practice-section {
+    margin-top: 3rem;
+    animation: fadeInUp 0.6s ease both;
+  }
+  .practice-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .practice-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem; font-weight: 900;
+    color: var(--dark);
+  }
+  .practice-badge {
+    background: rgba(46,196,182,0.12);
+    color: var(--deep-teal);
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.78rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .problem-card {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 1.2rem;
+    transition: all 0.3s ease;
+  }
+  .problem-card.solved {
+    border-color: rgba(46,196,182,0.3);
+    background: linear-gradient(135deg, rgba(46,196,182,0.03), white);
+  }
+  .problem-top {
+    padding: 1.5rem 1.8rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
+  }
+  .problem-q {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--dark);
+  }
+  .problem-difficulty {
+    font-size: 0.75rem; font-weight: 700;
+    padding: 0.3rem 0.8rem; border-radius: 50px;
+    white-space: nowrap;
+  }
+  .diff-easy { background: rgba(46,196,182,0.12); color: var(--deep-teal); }
+  .diff-medium { background: rgba(255,209,102,0.15); color: #A07800; }
+  .diff-hard { background: rgba(255,107,107,0.1); color: var(--coral); }
+  .problem-choices {
+    padding: 1.2rem 1.8rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+  .choice-btn {
+    padding: 0.75rem 1.2rem;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem; font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .choice-btn:hover:not(:disabled) {
+    border-color: var(--coral);
+    background: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255,107,107,0.1);
+  }
+  .choice-btn.correct {
+    border-color: var(--teal);
+    background: rgba(46,196,182,0.08);
+    color: var(--deep-teal);
+  }
+  .choice-btn.wrong {
+    border-color: var(--coral);
+    background: rgba(255,107,107,0.06);
+    color: var(--deep-coral);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+  .choice-btn:disabled { cursor: default; }
+  .choice-letter {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: white;
+    border: 1.5px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+  .problem-feedback {
+    display: none;
+    padding: 1rem 1.8rem;
+    font-size: 0.88rem;
+    border-top: 1px solid var(--border);
+    gap: 0.5rem;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .problem-feedback.show { display: flex; }
+  .problem-feedback.feedback-correct { color: var(--deep-teal); }
+  .problem-feedback.feedback-wrong { color: var(--deep-coral); }
+
+  /* ============ BOTTOM NAV ============ */
+  .lesson-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 3rem; padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    animation: fadeInUp 0.6s ease both;
+  }
+  .lesson-nav-btn {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600; font-size: 0.92rem;
+    transition: all 0.2s ease;
+  }
+  .lesson-nav-btn.prev {
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+  .lesson-nav-btn.prev:hover {
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+  .lesson-nav-btn.next {
+    background: var(--coral); color: white;
+    box-shadow: 0 4px 16px rgba(255,107,107,0.25);
+  }
+  .lesson-nav-btn.next:hover {
+    background: var(--deep-coral);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255,107,107,0.3);
+  }
+
+  /* ============ EXAM BUTTON ============ */
+  .exam-section {
+    text-align: center;
+    margin: 4rem 0 5rem;
+  }
+  .exam-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.1rem 2.4rem;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--coral), var(--deep-coral));
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(232, 69, 69, 0.3);
+    transition: all 0.3s ease;
+  }
+  .exam-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(232, 69, 69, 0.4);
+    background: linear-gradient(135deg, var(--deep-coral), var(--coral));
+  }
+  .exam-btn span.icon {
+    font-size: 1.4rem;
+  }
+  .exam-info {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  /* ============ ANIMATIONS ============ */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .main { padding: 2rem 1rem; }
+    .problem-choices { grid-template-columns: 1fr; }
+    .lesson-title { font-size: 2.4rem; }
+    .exam-btn { padding: 1rem 2rem; font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="course-layout">
+  <!-- MAIN LESSON -->
+  <main class="main">
+    <!-- Header -->
+    <div class="lesson-header">
+      <div class="lesson-tag">📖 Lesson 3</div>
+      <h1 class="lesson-title">Solving Linear Equations</h1>
+      <div class="lesson-meta">
+        <span>⏱ ~10 min</span>
+        <span>📊 Beginner</span>
+        <span>🎯 3 practice problems</span>
+      </div>
+    </div>
+
+    <!-- Intro -->
+    <div class="content-block">
+      <div class="prose">
+        <p>A <strong>linear equation</strong> is a math statement that says two things are equal — and it always has a variable (like <strong>x</strong>) that we're trying to find. Solving it means figuring out what number <em>x</em> must be to make the equation true.</p>
+        <p>Think of an equation like a perfectly balanced scale. Whatever you do to one side, you <em>must</em> do to the other — or it tips over.</p>
+      </div>
+      <div class="concept-card">
+        <h3>⚖️ The Golden Rule</h3>
+        <p>Whatever operation you apply to one side of the equation, apply the same operation to the other side. This keeps the equation balanced and the value of x correct.</p>
+      </div>
+    </div>
+
+    <!-- The equation -->
+    <div class="content-block">
+      <div class="block-label">Let's work through an example</div>
+      <div class="math-display">
+        <div class="eq-label">Solve for x</div>
+        <div class="equation"><span class="var">2x</span> + 5 = 15</div>
+      </div>
+      <div class="steps-block">
+        <div class="step-row">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Identify what's stuck to x</h4>
+            <p>We see <strong>2x + 5</strong> on the left. There are two things attached to x: the + 5 (addition) and the ×2 (multiplication). We remove them one at a time — outermost first.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Subtract 5 from both sides</h4>
+            <p>The + 5 is the outermost operation. The opposite of adding 5 is subtracting 5. Do this on both sides.</p>
+            <div class="step-math">2x + 5 <span class="hl">− 5</span> = 15 <span class="hl">− 5</span> → 2x = 10</div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Divide both sides by 2</h4>
+            <p>Now only the × 2 is left. The opposite of multiplying by 2 is dividing by 2. Do this on both sides.</p>
+            <div class="step-math">2x ÷ <span class="hl">2</span> = 10 ÷ <span class="hl">2</span> → x = <span class="hl2">5</span></div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Check your answer</h4>
+            <p>Plug x = 5 back into the original equation and confirm both sides are equal.</p>
+            <div class="step-math">2(<span class="hl2">5</span>) + 5 = 10 + 5 = <span class="hl2">15</span> ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="content-block">
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <span><strong>Tip — work backwards:</strong> Think of solving an equation as undoing operations in reverse order. If you put on your socks then your shoes, you take off your shoes <em>first</em>, then your socks. Same idea here.</span>
+      </div>
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <span><strong>Common mistake:</strong> Forgetting to apply the operation to <em>both</em> sides. If you subtract 5 from the left, you must subtract 5 from the right too — or the equation becomes false.</span>
+      </div>
+    </div>
+
+    <!-- Practice -->
+    <div class="practice-section">
+      <div class="practice-header">
+        <h2>Practice Problems</h2>
+        <div class="practice-badge">3 Questions</div>
+      </div>
+
+      <!-- Problem 1 -->
+      <div class="problem-card" id="prob1">
+        <div class="problem-top">
+          <div class="problem-q">x + 7 = 12  —  what is x?</div>
+          <div class="problem-difficulty diff-easy">Easy</div>
+        </div>
+        <div class="problem-choices" id="choices1">
+          <button class="choice-btn" onclick="answer(1, this, false, 'Nope — if x = 4 then 4 + 7 = 11, not 12.')">
+            <span class="choice-letter">A</span> x = 4
+          </button>
+          <button class="choice-btn" onclick="answer(1, this, true, 'Yes! Subtract 7 from both sides: x = 12 − 7 = 5. ✓')">
+            <span class="choice-letter">B</span> x = 5
+          </button>
+          <button class="choice-btn" onclick="answer(1, this, false, 'Not quite — if x = 6 then 6 + 7 = 13, not 12.')">
+            <span class="choice-letter">C</span> x = 6
+          </button>
+          <button class="choice-btn" onclick="answer(1, this, false, 'Not quite — if x = 19 you added instead of subtracted.')">
+            <span class="choice-letter">D</span> x = 19
+          </button>
+        </div>
+        <div class="problem-feedback" id="feedback1"></div>
+      </div>
+
+      <!-- Problem 2 -->
+      <div class="problem-card" id="prob2">
+        <div class="problem-top">
+          <div class="problem-q">3x = 21  —  what is x?</div>
+          <div class="problem-difficulty diff-easy">Easy</div>
+        </div>
+        <div class="problem-choices" id="choices2">
+          <button class="choice-btn" onclick="answer(2, this, false, 'Close! Check: 3 × 8 = 24, not 21. Try again.')">
+            <span class="choice-letter">A</span> x = 8
+          </button>
+          <button class="choice-btn" onclick="answer(2, this, false, 'Not quite — 3 × 63 is way too big. Remember: divide both sides by 3.')">
+            <span class="choice-letter">B</span> x = 63
+          </button>
+          <button class="choice-btn" onclick="answer(2, this, true, 'Correct! Divide both sides by 3: 21 ÷ 3 = 7. ✓')">
+            <span class="choice-letter">C</span> x = 7
+          </button>
+          <button class="choice-btn" onclick="answer(2, this, false, 'Nope — 3 × 6 = 18, not 21.')">
+            <span class="choice-letter">D</span> x = 6
+          </button>
+        </div>
+        <div class="problem-feedback" id="feedback2"></div>
+      </div>
+
+      <!-- Problem 3 -->
+      <div class="problem-card" id="prob3">
+        <div class="problem-top">
+          <div class="problem-q">4x − 3 = 13  —  what is x?</div>
+          <div class="problem-difficulty diff-medium">Medium</div>
+        </div>
+        <div class="problem-choices" id="choices3">
+          <button class="choice-btn" onclick="answer(3, this, false, 'Not quite — if x = 3: (4 × 3) − 3 = 9, not 13.')">
+            <span class="choice-letter">A</span> x = 3
+          </button>
+          <button class="choice-btn" onclick="answer(3, this, true, 'Yes! Step 1: add 3 to both sides → 4x = 16. Step 2: divide by 4 → x = 4. ✓')">
+            <span class="choice-letter">B</span> x = 4
+          </button>
+          <button class="choice-btn" onclick="answer(3, this, false, 'Nope — if x = 5: (4 × 5) − 3 = 17, not 13.')">
+            <span class="choice-letter">C</span> x = 5
+          </button>
+          <button class="choice-btn" onclick="answer(3, this, false, 'Not quite — check if you divided correctly. Try adding 3 first, then dividing by 4.')">
+            <span class="choice-letter">D</span> x = 2.5
+          </button>
+        </div>
+        <div class="problem-feedback" id="feedback3"></div>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="lesson-nav">
+      <a href="#" class="lesson-nav-btn prev">← Expressions vs Equations</a>
+      <a href="#" class="lesson-nav-btn next">Two-Step Equations →</a>
+    </div>
+
+    <!-- Exam button section -->
+    <div class="exam-section">
+      <a href="lineareqexam.html" class="exam-btn">
+        <span>Take Unit Exam</span>
+        <span class="icon">📝</span>
+      </a>
+      <div class="exam-info">
+        Test your understanding of Solving Linear Equations • 10 questions • ~15 min
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ---- PRACTICE PROBLEMS ----
+let solved = new Set();
+function answer(probNum, btn, isCorrect, feedback) {
+  if (solved.has(probNum)) return;
+  solved.add(probNum);
+  const choices = document.querySelectorAll(`#choices${probNum} .choice-btn`);
+  choices.forEach(b => {
+    b.disabled = true;
+    if (b === btn) {
+      b.classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+  });
+  const fb = document.getElementById(`feedback${probNum}`);
+  fb.textContent = (isCorrect ? '✓ ' : '✗ ') + feedback;
+  fb.className = `problem-feedback show ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}`;
+  if (isCorrect) {
+    document.getElementById(`prob${probNum}`).classList.add('solved');
+  }
+}
+</script>
+</body>
+</html>

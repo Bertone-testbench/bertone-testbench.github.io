@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limits & Continuity</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0; --warm-white: #FFFDF9; --peach: #FFD6BA;
+    --coral: #FF6B6B; --deep-coral: #E84545; --teal: #2EC4B6;
+    --deep-teal: #1A9E93; --navy: #1B2A4A; --dark: #0F1A2E;
+    --muted: #6B7B8D; --mint: #D0F5EC; --gold: #FFD166;
+    --surface: #FFFFFF; --border: rgba(27,42,74,0.08);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family:'DM Sans',sans-serif; background:var(--cream);
+    color:var(--navy); overflow-x:hidden;
+  }
+  .main {
+    padding:3rem 1.5rem; max-width:860px; margin:0 auto;
+  }
+  .lesson-header {
+    margin-bottom:2.5rem; animation:fadeInUp 0.6s ease both;
+  }
+  .lesson-tag {
+    display:inline-flex; align-items:center; gap:0.4rem;
+    background:rgba(46,196,182,0.1); color:var(--deep-teal);
+    padding:0.3rem 0.9rem; border-radius:50px;
+    font-size:0.8rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.08em; margin-bottom:1rem;
+  }
+  .lesson-title {
+    font-family:'Fraunces',serif; font-size:2.8rem; font-weight:900;
+    color:var(--dark); line-height:1.15; margin-bottom:0.8rem;
+  }
+  .lesson-meta {
+    display:flex; gap:1.5rem; align-items:center;
+    font-size:0.88rem; color:var(--muted);
+  }
+  .lesson-meta span { display:flex; align-items:center; gap:0.4rem; }
+  .content-block { animation:fadeInUp 0.6s ease both; }
+  .content-block + .content-block { margin-top:2.5rem; }
+  .block-label {
+    font-size:0.7rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.15em; color:var(--teal); margin-bottom:0.8rem;
+  }
+  .prose {
+    font-size:1.05rem; line-height:1.75; color:var(--navy);
+  }
+  .prose p + p { margin-top:1rem; }
+  .prose strong { font-weight:700; color:var(--dark); }
+  .concept-card {
+    background:white; border-radius:16px; border:1px solid var(--border);
+    padding:1.8rem 2rem; margin-top:1.5rem; position:relative; overflow:hidden;
+  }
+  .concept-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:4px;
+    background:linear-gradient(90deg, var(--teal), var(--deep-teal));
+  }
+  .concept-card h3 {
+    font-family:'Fraunces',serif; font-size:1.1rem; font-weight:700;
+    color:var(--dark); margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem;
+  }
+  .concept-card p { font-size:0.95rem; line-height:1.6; color:var(--muted); }
+  .math-display {
+    background:var(--dark); border-radius:16px; padding:2rem 2.5rem;
+    margin-top:1.5rem; position:relative; overflow:hidden;
+  }
+  .math-display .equation {
+    font-family:'Fraunces',serif; font-size:2.2rem; font-weight:700;
+    color:white; letter-spacing:0.02em;
+  }
+  .math-display .var { color:var(--teal); }
+  .callout {
+    border-radius:14px; padding:1.2rem 1.5rem; display:flex; gap:0.9rem;
+    align-items:flex-start; margin-top:1.5rem; font-size:0.9rem; line-height:1.6;
+  }
+  .callout-tip {
+    background:rgba(46,196,182,0.08); border:1px solid rgba(46,196,182,0.2);
+    color:var(--dark);
+  }
+  .callout-icon { font-size:1.2rem; flex-shrink:0; margin-top:1px; }
+  .practice-section { margin-top:3rem; animation:fadeInUp 0.6s ease both; }
+  .practice-header {
+    display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;
+  }
+  .practice-header h2 {
+    font-family:'Fraunces',serif; font-size:1.6rem; font-weight:900;
+    color:var(--dark);
+  }
+  .practice-badge {
+    background:rgba(46,196,182,0.12); color:var(--deep-teal);
+    padding:0.3rem 0.8rem; border-radius:50px;
+    font-size:0.78rem; font-weight:700; text-transform:uppercase;
+  }
+  .problem-card {
+    background:white; border-radius:20px; border:1px solid var(--border);
+    overflow:hidden; margin-bottom:1.2rem;
+  }
+  .problem-top {
+    padding:1.5rem 1.8rem; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  }
+  .problem-q { font-family:'Fraunces',serif; font-size:1.4rem; font-weight:700; color:var(--dark); }
+  .problem-difficulty {
+    font-size:0.75rem; font-weight:700; padding:0.3rem 0.8rem;
+    border-radius:50px; white-space:nowrap;
+  }
+  .diff-easy { background:rgba(46,196,182,0.12); color:var(--deep-teal); }
+  .problem-choices {
+    padding:1.2rem 1.8rem; display:grid; grid-template-columns:1fr 1fr; gap:0.7rem;
+  }
+  .choice-btn {
+    padding:0.75rem 1.2rem; border-radius:10px; border:2px solid var(--border);
+    background:var(--cream); font-size:0.92rem; font-weight:600; color:var(--navy);
+    cursor:pointer; transition:all 0.2s ease; text-align:left;
+    display:flex; align-items:center; gap:0.6rem;
+  }
+  .choice-btn:hover:not(:disabled) {
+    border-color:var(--teal); background:white; transform:translateY(-1px);
+  }
+  .choice-btn.correct {
+    border-color:var(--teal); background:rgba(46,196,182,0.08); color:var(--deep-teal);
+  }
+  .choice-btn.wrong {
+    border-color:var(--coral); background:rgba(255,107,107,0.06);
+    color:var(--deep-coral); text-decoration:line-through; opacity:0.7;
+  }
+  .choice-btn:disabled { cursor:default; }
+  .choice-letter {
+    width:22px; height:22px; border-radius:6px; background:white;
+    border:1.5px solid currentColor; display:flex; align-items:center;
+    justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0;
+    opacity:0.6;
+  }
+  .problem-feedback {
+    display:none; padding:1rem 1.8rem; font-size:0.88rem;
+    border-top:1px solid var(--border); gap:0.5rem; align-items:flex-start;
+    line-height:1.5;
+  }
+  .problem-feedback.show { display:flex; }
+  .problem-feedback.feedback-correct { color:var(--deep-teal); }
+  .problem-feedback.feedback-wrong { color:var(--deep-coral); }
+  .lesson-nav {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:3rem; padding-top:2rem; border-top:1px solid var(--border);
+  }
+  .lesson-nav-btn {
+    display:flex; align-items:center; gap:0.6rem; padding:0.8rem 1.5rem;
+    border-radius:50px; text-decoration:none; font-weight:600; font-size:0.92rem;
+    transition:all 0.2s ease;
+  }
+  .lesson-nav-btn.prev {
+    color:var(--muted); border:1.5px solid var(--border);
+  }
+  .lesson-nav-btn.prev:hover { border-color:var(--navy); color:var(--navy); }
+  .lesson-nav-btn.next {
+    background:var(--teal); color:white; box-shadow:0 4px 16px rgba(46,196,182,0.25);
+  }
+  .lesson-nav-btn.next:hover {
+    background:var(--deep-teal); transform:translateY(-1px);
+  }
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @media (max-width:900px) {
+    .main { padding:2rem 1rem; }
+    .problem-choices { grid-template-columns:1fr; }
+    .lesson-title { font-size:2.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<main class="main">
+  <div class="lesson-header">
+    <div class="lesson-tag">📖 Calculus • Lesson 1</div>
+    <h1 class="lesson-title">Limits & Continuity</h1>
+    <div class="lesson-meta">
+      <span>⏱ ~8 min</span>
+      <span>📊 Intermediate</span>
+      <span>🎯 3 practice problems</span>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <div class="prose">
+      <p>A <strong>limit</strong> tells us what value a function approaches as the input gets closer and closer to a certain number — even if the function never actually reaches that number at that point.</p>
+      <p>Continuity means the function has no jumps, breaks, or holes — you can draw it without lifting your pencil.</p>
+    </div>
+    <div class="concept-card">
+      <h3>🔍 Core Idea: The Limit Concept</h3>
+      <p>We care about behavior <em>near</em> x = a, not necessarily <em>at</em> x = a. The limit exists if the left-hand and right-hand approaches agree.</p>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <div class="block-label">Classic Example</div>
+    <div class="math-display">
+      <div class="equation">lim_{x→2} (x² − 4)/(x − 2)</div>
+    </div>
+    <div class="steps-block" style="margin-top:1.5rem;">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Direct substitution fails</h4>
+          <p>Plugging in x = 2 gives 0/0 — indeterminate.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Factor and simplify</h4>
+          <div class="step-math">(x − 2)(x + 2) / (x − 2) = x + 2  (for x ≠ 2)</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Now take the limit</h4>
+          <div class="step-math">lim_{x→2} (x + 2) = 4</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <span><strong>Tip:</strong> If you get 0/0, try factoring, rationalizing, or using conjugate tricks.</span>
+    </div>
+  </div>
+
+  <div class="practice-section">
+    <div class="practice-header">
+      <h2>Practice Problems</h2>
+      <div class="practice-badge">3 Questions</div>
+    </div>
+
+    <div class="problem-card" id="prob1">
+      <div class="problem-top">
+        <div class="problem-q">lim_{x→3} (x² − 9)/(x − 3) = ?</div>
+        <div class="problem-difficulty diff-easy">Easy</div>
+      </div>
+      <div class="problem-choices" id="choices1">
+        <button class="choice-btn" onclick="answer(1,this,false,'Try factoring numerator.')">A) 0</button>
+        <button class="choice-btn" onclick="answer(1,this,true,'Yes — (x−3)(x+3)/(x−3) → x+3 at x=3 = 6')">B) 6</button>
+        <button class="choice-btn" onclick="answer(1,this,false,'Too high — check simplification.')">C) 9</button>
+        <button class="choice-btn" onclick="answer(1,this,false,'Direct sub gives 0/0 — simplify first.')">D) undefined</button>
+      </div>
+      <div class="problem-feedback" id="feedback1"></div>
+    </div>
+
+    <!-- Add 2 more similar problems here if desired -->
+  </div>
+
+  <div class="lesson-nav">
+    <a href="#" class="lesson-nav-btn prev">← Coming from Algebra</a>
+    <a href="#" class="lesson-nav-btn next">Derivatives & Power Rule →</a>
+  </div>
+</main>
+
+<script>
+let solved = new Set();
+function answer(num, btn, correct, msg) {
+  if (solved.has(num)) return;
+  solved.add(num);
+  document.querySelectorAll(`#choices${num} .choice-btn`).forEach(b => {
+    b.disabled = true;
+    if (b === btn) b.classList.add(correct ? 'correct' : 'wrong');
+  });
+  const fb = document.getElementById(`feedback${num}`);
+  fb.textContent = (correct ? '✓ ' : '✗ ') + msg;
+  fb.className = `problem-feedback show ${correct ? 'feedback-correct' : 'feedback-wrong'}`;
+}
+</script>
+</body>
+</html>

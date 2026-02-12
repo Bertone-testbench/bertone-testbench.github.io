@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Courses — solvy.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Refined Palette */
+    --bg-cream: #FFF9F2;
+    --bg-white: #FFFFFF;
+    
+    --brand-dark: #0F172A;
+    --brand-navy: #1E293B;
+    --brand-coral: #FF6B6B;
+    --brand-teal: #0D9488;
+    --brand-green: #10B981;
+    --brand-purple: #8B5CF6;
+    
+    --text-main: #1E293B;
+    --text-muted: #64748B;
+    --text-light: #94A3B8;
+
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-cream);
+    color: var(--text-main);
+    min-height: 100vh;
+    padding-bottom: 4rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- Layout & Typography --- */
+  .container { 
+    max-width: 1024px; 
+    margin: 0 auto; 
+    padding: 0 24px; 
+  }
+
+  h1, h2, h3 { font-family: 'Fraunces', serif; }
+
+  /* --- Header Section --- */
+  .page-header { 
+    text-align: center; 
+    padding: 4rem 0 2.5rem; 
+    position: relative;
+  }
+  
+  .page-header h1 { 
+    font-size: 3rem; 
+    font-variation-settings: "wght" 800;
+    color: var(--brand-dark); 
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+  
+  .page-header p { 
+    font-size: 1.125rem; 
+    color: var(--text-muted); 
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* --- Stats Dashboard --- */
+  .stats-deck {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 0 auto 4rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: var(--bg-white);
+    padding: 0.75rem 1.25rem;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: transform 0.2s ease;
+  }
+  
+  .stat-pill:hover { transform: translateY(-2px); }
+  .stat-icon { font-size: 1.1rem; }
+  .stat-val { font-weight: 700; color: var(--brand-dark); }
+  .stat-label { font-size: 0.875rem; color: var(--text-muted); font-weight: 500; }
+
+  /* --- Section Headers --- */
+  .section-group { margin-bottom: 4rem; }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .section-icon { 
+    width: 48px; height: 48px; 
+    background: white;
+    border-radius: 12px; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 1.25rem; 
+    margin-right: 1rem;
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .section-header h2 { 
+    font-size: 1.75rem; 
+    font-variation-settings: "wght" 600;
+    color: var(--brand-dark); 
+  }
+  
+  .progress-badge { 
+    margin-left: auto; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    color: var(--brand-teal); 
+    background: rgba(13, 148, 136, 0.1); 
+    padding: 0.35rem 0.85rem; 
+    border-radius: 50px; 
+  }
+
+  /* --- Grid & Cards --- */
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .course-card {
+    background: var(--bg-white);
+    border-radius: 20px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(0,0,0,0.02);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* Status Badge (Top Right) */
+  .status-badge {
+    align-self: flex-start;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  .status-complete { background: #DCFCE7; color: #166534; }
+  .status-progress { background: #E0F2FE; color: #075985; }
+  .status-locked { background: #F1F5F9; color: #64748B; }
+  .status-start { background: #F3E8FF; color: #6B21A8; }
+
+  /* Card Content */
+  .course-card h3 {
+    font-size: 1.35rem;
+    font-variation-settings: "wght" 700;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    color: var(--brand-dark);
+  }
+
+  .course-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #F1F5F9;
+  }
+
+  .meta-item {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  /* Buttons */
+  .card-action {
+    width: 100%;
+    padding: 0.85rem;
+    border-radius: 12px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--brand-dark);
+    color: white;
+  }
+  .btn-primary:hover { background: #334155; }
+
+  .btn-secondary {
+    background: var(--brand-teal);
+    color: white;
+  }
+  .btn-secondary:hover { background: #0F766E; }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid #E2E8F0;
+    color: var(--text-muted);
+  }
+  .btn-outline:hover {
+    border-color: var(--brand-dark);
+    color: var(--brand-dark);
+  }
+
+  /* Locked State Specifics */
+  .course-card.locked {
+    opacity: 0.7;
+    background: #FAFAFA;
+    pointer-events: none; /* No hover effect */
+  }
+  .course-card.locked .card-action {
+    background: #E2E8F0;
+    color: #94A3B8;
+    cursor: not-allowed;
+  }
+  .lock-icon-overlay {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    font-size: 1.2rem;
+    color: var(--text-light);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    color: var(--text-light);
+    font-size: 0.9rem;
+  }
+  .logo { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.2rem; color: var(--brand-dark); text-decoration: none; }
+  .logo span { color: var(--brand-coral); }
+
+  @media (max-width: 600px) {
+    .page-header h1 { font-size: 2.2rem; }
+    .stats-deck { gap: 0.75rem; flex-direction: column; align-items: center; }
+    .stat-pill { width: 100%; justify-content: center; max-width: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="page-header">
+    <h1>Your Learning Path</h1>
+    <p>Master advanced concepts through interactive problem solving.</p>
+  </header>
+
+  <div class="stats-deck">
+    <div class="stat-pill">
+      <span class="stat-icon">🔥</span>
+      <span class="stat-val">3 Day</span>
+      <span class="stat-label">Streak</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-icon">⚡</span>
+      <span class="stat-val">150</span>
+      <span class="stat-label">Total XP</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-icon">🎓</span>
+      <span class="stat-val">2/12</span>
+      <span class="stat-label">Modules</span>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <div class="section-header">
+      <div class="section-icon" style="color: var(--brand-purple);">∫</div>
+      <h2>Calculus</h2>
+      <span class="progress-badge">2/3 in this set</span>
+    </div>
+
+    <div class="courses-grid">
+      <div class="course-card">
+        <span class="status-badge status-complete">Completed</span>
+        <h3>Limits & Continuity</h3>
+        <p>The foundation of calculus. Understand behavior as x approaches a specific value.</p>
+        <div class="meta-row">
+          <span class="meta-item">📝 10 Steps</span>
+          <span class="meta-item">⏱ 8 Min</span>
+        </div>
+        <a href="limits.html" class="card-action btn-outline">Review Lesson</a>
+      </div>
+
+      <div class="course-card">
+        <span class="status-badge status-complete">Completed</span>
+        <h3>Derivatives & Power Rule</h3>
+        <p>Learn to measure instantaneous rates of change and apply the power rule shortcut.</p>
+        <div class="meta-row">
+          <span class="meta-item">📝 13 Steps</span>
+          <span class="meta-item">⏱ 12 Min</span>
+        </div>
+        <a href="course.html" class="card-action btn-outline">Review Lesson</a>
+      </div>
+
+      <div class="course-card" style="border: 2px solid var(--brand-teal);">
+        <span class="status-badge status-progress">In Progress</span>
+        <h3>Chain Rule</h3>
+        <p>Differentiate composite functions—functions nested inside other functions.</p>
+        <div class="meta-row">
+          <span class="meta-item">📝 12 Steps</span>
+          <span class="meta-item">⏱ 10 Min</span>
+        </div>
+        <a href="chainrule.html" class="card-action btn-secondary">Continue Learning →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <div class="section-header">
+      <div class="section-icon" style="color: var(--brand-coral);">📐</div>
+      <h2>Linear Algebra</h2>
+      <span class="progress-badge">0/3 in this set</span>
+    </div>
+
+    <div class="courses-grid">
+      <div class="course-card">
+        <span class="status-badge status-start">Up Next</span>
+        <h3>Systems of Equations</h3>
+        <p>Solve systems with 2 and 3 unknowns using Gaussian elimination and substitution.</p>
+        <div class="meta-row">
+          <span class="meta-item">📝 12 Steps</span>
+          <span class="meta-item">⏱ 11 Min</span>
+        </div>
+        <a href="linearequations.html" class="card-action btn-primary">Start Lesson</a>
+      </div>
+
+      <div class="course-card locked">
+        <div class="lock-icon-overlay">🔒</div>
+        <span class="status-badge status-locked">Locked</span>
+        <h3>Vectors & Spaces</h3>
+        <p>Understanding direction and magnitude. Adding, scaling, and visualizing vectors.</p>
+        <div class="meta-row">
+          <span class="meta-item">📝 13 Steps</span>
+          <span class="meta-item">⏱ 12 Min</span>
+        </div>
+        <button class="card-action" disabled>Complete Previous</button>
+      </div>
+
+      <div class="course-card locked">
+        <div class="lock-icon-overlay">🔒</div>
+        <span class="status-badge status-locked">Locked</span>
+        <h3>Matrices & Operations</h3>
+        <p>The language of Linear Algebra. How to add, multiply, and transpose matrices.</p>
+        <div class="meta-row">
+          <span class="meta-item">📝 14 Steps</span>
+          <span class="meta-item">⏱ 13 Min</span>
+        </div>
+        <button class="card-action" disabled>Complete Previous</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="#" class="logo">solvy<span>.</span>ai</a>
+  <p>© 2023 Solvy Education. Making math accessible.</p>
+</footer>
+
+</body>
+</html>
